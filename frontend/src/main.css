@@ -1,7 +1,31 @@
+:root {
+	--purple-1: #3E3890;
+	--purple-2: #5B4DBE;
+	--light-purple-1: #C7C0F5;
+	--light-purple-2: #E7E4FA;
+	--light-grey: #F2F2F2;
+	--dark-grey: #B5B5B5;
+	--white: #FFFFFF;
+	--yellow: #F6C01C;
+	--dark-blue: #2E3A59;
+	--primary-font-regular: 400 16px 'Montserrat';
+	--primary-font-medium: 500 16px 'Montserrat';
+	--primary-font-semibold: 600 16px 'Montserrat';
+	--primary-font-bold: 700 16px 'Montserrat';
+	--primary-font-extrabold: 800 16px 'Montserrat';
+}
+
 /* Global css */
 * {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Montserrat';
+	font-weight: 500;
+	font-size: 14px;
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Montserrat-SemiBold';
+	src: local('Montserret')
 }
