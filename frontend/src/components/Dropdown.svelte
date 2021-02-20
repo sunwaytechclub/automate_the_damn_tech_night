@@ -11,26 +11,33 @@
 
     export let selectedValue
     export let placeholder = "Speaker name"
+    export let label;
 
-    function handleSelect(event) {
-    console.log('selected item=', event.detail);
-    // .. do something here 🙂
-    }
 </script>
 
 <div class="themed">
-<Select {items} {selectedValue} {placeholder} on:select={handleSelect}></Select>
+    <!-- svelte-ignore a11y-label-has-associated-control -->
+    <label>{label}</label>
+    <Select {items} {selectedValue} {placeholder} on:select></Select>
 </div>
 
 <style>
-.themed {
-    --borderRadius: 5px;
-    --background: var(--light-grey);
-    --itemIsActiveBG: var(--purple-2);
-    --itemHoverBG: var(--light-purple-2);
-    --border: none;
-    --height: 51px;
-    font: var(--primary-font-medium);
-    margin-bottom: 15px;
-  }
+    label {
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+        color: var(--dark-blue);
+    }
+    
+    .themed {
+        --borderRadius: 5px;
+        --background: var(--light-grey);
+        --itemIsActiveBG: var(--purple-2);
+        --itemHoverBG: var(--light-purple-2);
+        --placeholderColor: var(--dark-grey);
+        --border: none;
+        --height: 51px;
+        font: var(--primary-font-medium);
+        margin-bottom: 15px;
+    }
 </style>
