@@ -30,7 +30,7 @@
         outline: none;
         background-color: var(--light-grey);
         border: none;
-        padding: 0 15px;
+        padding: 0 20px;
     }
     .flatpickr {
         margin-bottom: 15px;
