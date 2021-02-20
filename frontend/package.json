@@ -11,6 +11,7 @@
     "ganalytics": "^3.1.2",
     "navaid": "^1.0.2",
     "svelte-flatpickr": "^3.1.0",
+    "svelte-loading-spinners": "^0.1.4",
     "svelte-select": "^3.17.0"
   },
   "devDependencies": {
