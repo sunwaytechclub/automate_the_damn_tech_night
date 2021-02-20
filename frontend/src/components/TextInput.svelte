@@ -4,12 +4,21 @@
     export let label = "Username";
     export let value;
     export let disabled;
+    export let error = {
+        enabled: false,
+        message: "Invalid"
+    }
 </script>
 
-<!-- svelte-ignore a11y-label-has-associated-control -->
-<label>{label}</label>
+<div>
+    <!-- svelte-ignore a11y-label-has-associated-control -->
+    <label>{label}</label>
 
-<input class="{disabled ? "disabled" : ""}"{type} {placeholder} {disabled} {...$$restProps} bind:this={value}/>
+    <input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}"{type} {placeholder} {disabled} {...$$restProps} bind:this={value}/>
+    {#if error.enabled}
+        <p class="error-message">{error.message}</p>
+    {/if}
+</div>
 
 <style>
     label {
@@ -34,5 +43,27 @@
     }
     .disabled {
         color: var(--medium-grey)
+    }
+    .error {
+        border: 2px var(--red) solid;
+    }
+    .error-message {
+        font: var(--primary-font-regular);
+        font-size: 12px;
+        color: var(--red);
+        margin-bottom: 15px;
+        margin-top: -10px;
+    }
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: var(--dark-grey);
+        opacity: 1; /* Firefox */
+    }
+
+        :-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: var(--dark-grey);
+    }
+
+        ::-ms-input-placeholder { /* Microsoft Edge */
+        color: var(--dark-grey);
     }
 </style>
