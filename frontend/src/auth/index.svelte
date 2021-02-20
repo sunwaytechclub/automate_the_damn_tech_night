@@ -23,7 +23,7 @@
             return error = true;
         }
         error = false;
-        loading = false;
+        // loading = false;
         
         // TODO: POST auth
         // window.location.href = "/form"
