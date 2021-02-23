@@ -18,7 +18,9 @@ def generate_speaker_poster(speaker):
     name = speaker["PROFILE PIC"].replace(".jpg", "")
 
     # Get the cropped image
-    cropped_image, mask = crop(speaker["PROFILE PIC"])
+    cropped_image, mask = crop(
+        f"{settings.MEDIA_ROOT}speakers/{speaker['PROFILE PIC']}"
+    )
 
     # Populate positions
     size = draw.multiline_textsize(positions, font=font)

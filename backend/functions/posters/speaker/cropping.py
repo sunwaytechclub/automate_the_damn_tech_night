@@ -3,8 +3,7 @@ from PIL import Image, ImageOps, ImageDraw
 import os
 
 
-def crop(name):
-    SPEAKER_FOLDER = settings.MEDIA_ROOT + "speakers/"
+def crop(fiile_path):
 
     size = (206, 206)
     mask = Image.new("L", (200, 200), 0)
@@ -13,7 +12,7 @@ def crop(name):
     draw.ellipse((0, 0) + size, fill=255)
 
     # Mast the profile picture to the cirlce
-    im = Image.open(SPEAKER_FOLDER + name)
+    im = Image.open(fiile_path)
     output = ImageOps.fit(im, mask.size, centering=(0.5, 0.5))
     output.putalpha(mask)
 
