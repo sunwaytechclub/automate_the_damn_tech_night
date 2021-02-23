@@ -30,7 +30,8 @@ def generate_event_poster(episode_number, date, time):
         (255, 255, 255),
         font=font,
     )
-    img.save(f"{settings.MEDIA_ROOT}/{episode_number}-{date}-{time}.jpg")
+    os.makedirs(f"{settings.MEDIA_ROOT}/event/", exist_ok=True)
+    img.save(f"{settings.MEDIA_ROOT}/event/{episode_number}-{date}-{time}.jpg")
     return img
 
 
