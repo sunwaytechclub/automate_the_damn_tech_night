@@ -50,3 +50,9 @@ Finally there will be an example output :P
 Not yet written
 
 And that's it! Hope you enjoy using it XD
+
+## 📝 Todo <a name = "todo"></a>
+
+- [ ] Generate poster with event and speaker details
+- [ ] Automate social media posting
+- [ ] Automate emailing to departments
