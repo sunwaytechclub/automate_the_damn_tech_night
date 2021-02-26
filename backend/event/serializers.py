@@ -8,7 +8,7 @@ class TopicReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Topic
-        fields = ["id", "speaker", "title", "why", "what"]
+        fields = ["id", "speaker", "title", "why", "what", "poster"]
 
 
 class EventReadSerializer(serializers.ModelSerializer):
@@ -16,7 +16,7 @@ class EventReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ["id", "episode", "datetime", "topic"]
+        fields = ["id", "episode", "datetime", "poster", "topic"]
 
 
 class TopicCreateSerializer(serializers.ModelSerializer):

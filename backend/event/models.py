@@ -8,7 +8,7 @@ class Event(models.Model):
     poster = models.ImageField(upload_to="poster/event")
 
     def __str__(self):
-        return self.episode
+        return str(self.episode)
 
 
 class Topic(models.Model):
