@@ -59,7 +59,7 @@ class EventView(ModelViewSet):
                 what=topic["what"],
                 poster=poster,
             )
-        return Response(event.id)
+        return Response(EventReadSerializer(instance=event).data)
 
 
 class TopicView(ModelViewSet):
