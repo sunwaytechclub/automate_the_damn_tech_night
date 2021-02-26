@@ -6,13 +6,14 @@ from django.conf import settings
 def run():
     speaker = Speaker.objects.first()
     file_name = speaker.avatar.name.split("/")[-1]
-    generate_speaker_poster(
+    img = generate_speaker_poster(
         {
             "PROFILE PIC": file_name,
             "NAME": speaker.name,
             "POSITIONS": speaker.position,
             "ACTIVITY": "ABCD ABCD ABCD ABCD ABCD ABCD\nABCD ABCD ABCD ABCD ABCD ABCD",
-            "WHY": "To enhance your workflow",
-            "WHAT": "Overview of Software Development",
+            "WHY": "ABCD ABCD ABCD ABCD ABCD ABCD\nABCD ABCD ABCD ABCD ABCD ABCD",
+            "WHAT": "ABCD ABCD ABCD ABCD ABCD ABCD\nABCD ABCD ABCD ABCD ABCD ABCD",
         }
     )
+    img.show()
