@@ -19,6 +19,7 @@ def generate_speaker_poster(speaker):
     cropped_image, mask = crop(
         f"{settings.MEDIA_ROOT}speakers/{speaker['PROFILE PIC']}"
     )
+    cropped_image = ImageOps.grayscale(cropped_image)
 
     # Populate positions
     size = draw.multiline_textsize(positions, font=font)
