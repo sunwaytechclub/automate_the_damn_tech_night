@@ -47,6 +47,97 @@ Finally there will be an example output :P
 
 ## 🔨 Usage <a name = "usage"></a>
 
-Not yet written
+### Back-end
 
-And that's it! Hope you enjoy using it XD
+- [Create new speaker](#createnewspeaker)
+- [Create new event](#createnewevent)
+
+#### Create new speaker <a name = "createnewspeaker"></a>
+
+##### Request
+
+URL: `/api/v1/speaker/`
+
+Method: `POST`
+
+Content Type: `multipart/form-data`
+
+body:
+
+```bash
+name=<speaker name>
+position=<speaker desired display experiences>
+avatar=<speaker profile picture>
+```
+
+##### Response
+
+```json
+{
+  "id": 4,
+  "name": "Rain Chai",
+  "position": "Head of Marketing",
+  "avatar": "http://localhost:8000/media/speakers/Rain_chai.png"
+}
+```
+
+---
+
+#### Create new event <a name = "createnewevent"></a>
+
+##### Request
+
+URL: `/api/v1/event/`
+
+Method: `POST`
+
+Content Type: `application/json`
+
+body:
+
+```json
+{
+  "episode": 3,
+  "datetime": "2021-02-01T09:22:43Z",
+  "topic": [
+    {
+      "speaker": 4,
+      "title": "hehehe",
+      "why": "huhuhu",
+      "what": "hohohoh"
+    }
+  ]
+}
+```
+
+##### Response
+
+```json
+{
+  "id": 9,
+  "episode": 3,
+  "datetime": "2021-02-01T09:22:43Z",
+  "poster": "/media/poster/event/3_DT74pxb.jpg",
+  "topic": [
+    {
+      "id": 9,
+      "speaker": {
+        "id": 4,
+        "name": "Rain Chai",
+        "position": "head of marketing",
+        "avatar": "/media/speakers/Group_99_iPRATzI.png"
+      },
+      "title": "hehehe",
+      "why": "huhuhu",
+      "what": "hohohoh",
+      "poster": "/media/poster/speaker/3-Rain_Chai.jpg"
+    }
+  ]
+}
+```
+
+## 📝 Todo <a name = "todo"></a>
+
+- [x] Generate poster with event and speaker details
+- [ ] Automate social media posting
+- [ ] Automate emailing to departments
