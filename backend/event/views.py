@@ -19,7 +19,7 @@ class EventView(ModelViewSet):
         data = request.data
         serializer = EventCreateSerializer(data=data)
         if not serializer.is_valid():
-            return Response("Bad request", status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         datetime = serializer.validated_data["datetime"]
         poster = ImageFile(
             generate_event_poster(
