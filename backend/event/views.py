@@ -4,17 +4,17 @@ from rest_framework import status
 from rest_framework import permissions
 from .models import Event, Topic
 from speaker.models import Speaker
-from .serializers import EventSerializer, TopicSerializer
+from .serializers import EventCreateSerializer, EventReadSerializer, TopicReadSerializer
 
 
 class EventView(ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Event.objects.all()
-    serializer_class = EventSerializer
+    serializer_class = EventReadSerializer
 
     def create(self, request):
         data = request.data
-        serializer = EventSerializer(data=data)
+        serializer = EventCreateSerializer(data=data)
         if not serializer.is_valid():
             return Response("Bad request", status=status.HTTP_400_BAD_REQUEST)
         event = Event.objects.create(episode=data["episode"], datetime=data["datetime"])
@@ -33,4 +33,4 @@ class EventView(ModelViewSet):
 class TopicView(ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Topic.objects.all()
-    serializer_class = TopicSerializer
+    serializer_class = TopicReadSerializer
