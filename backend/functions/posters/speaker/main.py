@@ -1,7 +1,6 @@
 from PIL import Image, ImageOps, ImageDraw, ImageFont
 from .cropping import crop
 from django.conf import settings
-import os
 
 TOP_RIGHT = (288, 400)
 TEXT_SIZE = 18
@@ -15,7 +14,6 @@ def generate_speaker_poster(speaker):
     font = ImageFont.truetype(FONT_TTF_FILE, TEXT_SIZE)
 
     positions = speaker["POSITIONS"]
-    name = speaker["PROFILE PIC"].replace(".jpg", "")
 
     # Get the cropped image
     cropped_image, mask = crop(
@@ -59,6 +57,4 @@ def generate_speaker_poster(speaker):
     what_font = ImageFont.truetype(FONT_TTF_FILE, what_text_size)
     draw.text(what_top_left, speaker["WHAT"], font=what_font)
 
-    os.makedirs(f"{settings.MEDIA_ROOT}/speaker_poster", exist_ok=True)
-    img.save(f"{settings.MEDIA_ROOT}/speaker_poster/{name}.jpg")
     return img

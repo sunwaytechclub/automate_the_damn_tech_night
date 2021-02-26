@@ -4,8 +4,6 @@ from PIL import ImageDraw
 from datetime import datetime
 from django.conf import settings
 
-import os
-
 TEXT_Y_PIXEL = 680
 TEXT_SIZE = 36
 TEMPLATE_IMG = "functions/posters/event/poster.png"
@@ -30,8 +28,6 @@ def generate_event_poster(episode_number, date, time):
         (255, 255, 255),
         font=font,
     )
-    os.makedirs(f"{settings.MEDIA_ROOT}/event_poster/", exist_ok=True)
-    img.save(f"{settings.MEDIA_ROOT}/event_poster/{episode_number}-{date}-{time}.jpg")
     return img
 
 
