@@ -5,6 +5,10 @@ from speaker.models import Speaker
 class Event(models.Model):
     episode = models.IntegerField(unique=True)
     datetime = models.DateTimeField()
+    poster = models.ImageField(upload_to="poster/event")
+
+    def __str__(self):
+        return str(self.episode)
 
 
 class Topic(models.Model):
@@ -15,3 +19,7 @@ class Topic(models.Model):
     title = models.CharField(max_length=58)
     why = models.CharField(max_length=58)
     what = models.CharField(max_length=58)
+    poster = models.ImageField(upload_to="poster/speaker")
+
+    def __str__(self):
+        return self.title

@@ -4,11 +4,11 @@ from .models import Event, Topic
 
 class TopicInline(admin.TabularInline):
     model = Topic
-    fields = ("speaker", "title", "why", "what")
+    fields = ("speaker", "title", "why", "what", "poster")
 
 
 @admin.register(Event)
 class EventAdminView(admin.ModelAdmin):
     model = Event
-    list_display = ["episode", "datetime"]
+    list_display = ["episode", "datetime", "poster"]
     inlines = (TopicInline,)
