@@ -4,7 +4,7 @@ from .models import Event, EventSpeaker
 
 class EventSpeakerInline(admin.TabularInline):
     model = EventSpeaker
-    fields = ("speaker",)
+    fields = ("speaker", "title", "why", "what")
 
 
 @admin.register(Event)
