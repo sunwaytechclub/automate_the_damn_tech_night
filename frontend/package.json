@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "ganalytics": "^3.1.2",
+    "js-cookie": "^2.2.1",
     "navaid": "^1.0.2",
     "svelte-flatpickr": "^3.1.0",
     "svelte-loading-spinners": "^0.1.4",
