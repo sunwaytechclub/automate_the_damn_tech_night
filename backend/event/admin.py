@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Event, EventSpeaker
+from .models import Event, Topic
 
 
-class EventSpeakerInline(admin.TabularInline):
-    model = EventSpeaker
+class TopicInline(admin.TabularInline):
+    model = Topic
     fields = ("speaker", "title", "why", "what")
 
 
@@ -11,4 +11,4 @@ class EventSpeakerInline(admin.TabularInline):
 class EventAdminView(admin.ModelAdmin):
     model = Event
     list_display = ["episode", "datetime"]
-    inlines = (EventSpeakerInline,)
+    inlines = (TopicInline,)

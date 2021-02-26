@@ -7,7 +7,7 @@ class Event(models.Model):
     datetime = models.DateTimeField()
 
 
-class EventSpeaker(models.Model):
+class Topic(models.Model):
     event = models.ForeignKey(to=Event, on_delete=models.CASCADE)
     speaker = models.ForeignKey(to=Speaker, on_delete=models.CASCADE)
     title = models.CharField(max_length=58)
