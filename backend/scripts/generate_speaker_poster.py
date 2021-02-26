@@ -16,4 +16,4 @@ def run():
             "WHAT": "ABCD ABCD ABCD ABCD ABCD ABCD\nABCD ABCD ABCD ABCD ABCD ABCD",
         }
     )
-    img.show()
+    print(img)

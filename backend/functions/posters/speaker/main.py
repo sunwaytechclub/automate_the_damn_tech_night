@@ -2,6 +2,8 @@ from PIL import Image, ImageOps, ImageDraw, ImageFont
 from .cropping import crop
 from django.conf import settings
 
+import io
+
 TOP_RIGHT = (288, 400)
 TEXT_SIZE = 18
 TEMPLATE_IMG = "functions/posters/speaker/assets/TNT1.png"
@@ -58,4 +60,9 @@ def generate_speaker_poster(speaker):
     what_font = ImageFont.truetype(FONT_TTF_FILE, what_text_size)
     draw.text(what_top_left, speaker["WHAT"], font=what_font)
 
-    return img
+    # Save in memory not on disk
+    output = io.BytesIO()
+    img.save(output, format="JPEG")
+    output.seek(0)
+
+    return output
