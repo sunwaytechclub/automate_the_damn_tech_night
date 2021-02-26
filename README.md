@@ -74,6 +74,7 @@ avatar=<speaker profile picture>
 
 ```json
 {
+  "id": 4,
   "name": "Rain Chai",
   "position": "Head of Marketing",
   "avatar": "http://localhost:8000/media/speakers/Rain_chai.png"
