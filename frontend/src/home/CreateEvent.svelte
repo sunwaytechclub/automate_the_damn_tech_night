@@ -6,7 +6,8 @@
     import DatePicker from "@/components/DatePicker.svelte"
     import TimePicker from "@/components/TimePicker.svelte"
     import SideNavbar from "@/components/SideNavbar.svelte"
-    import Speaker from "@/form/Speaker.svelte"
+    import Header from "@/components/Header.svelte"
+    import Speaker from "@/home/Speaker.svelte"
 
     import { storeFE, idIncrement } from '@/components/stores.js';
 
@@ -95,33 +96,38 @@
 <div class="wrapper">
     <SideNavbar/>
     <div class="content">
-        <p class="page-header">New Tech Night Event</p>
-        <div>
-            <TextInput bind:value={episode} label="Tech Night Episode" placeholder="Tech Night Episode" error={episodeError}/>
-        </div>
-        <div>
-            {#each $storeFE as item}
-            <svelte:component this={Speaker} objAttributes={item}/>
-            {/each}
-            <div class="add-topic-div">
-                <ActionButton on:click={addSpeaker}/>
+        <Header title="New Tech Night Event" previousPath="/home"/>
+        <div class="page-subheader">
+			<p class="subheader-text">Create a tech night event</p>
+		</div>
+        <div class="form">
+            <div>
+                <TextInput bind:value={episode} label="Tech Night Episode" placeholder="Tech Night Episode" error={episodeError}/>
             </div>
-        </div>
-        <div class="side-by-side">
-            <DatePicker bind:date error={dateError}/>
-            <TimePicker bind:time error={timeError}/>
-        </div>
-        <div class="side-by-side" style="margin-bottom: 20px">
-            <TextInput bind:value={venue} label="Venue / Platform" placeholder="Venue / Platform" error={venueError}/>
-            <TextInput bind:value={registrationLink} label="Registration Link" placeholder="Registration Link" error={registrationLinkError}/>
-        </div>
-        <CheckBox label="Post on Facebook Group" bind:checked={isPostFacebook}/>
-        <CheckBox label="Post on Telegram " bind:checked={isPostTelegram}/>
-        <CheckBox label="Send emails to departments" 
-            subText="Email will be sent to SET, A-Level, SFP, AUSMAT, DIIT. To edit, go to admin portal."
-            bind:checked={isSendDepartments}/>
-        <div class="publish-button-div">
-            <Button style="width: 50%" label="PUBLISH" on:click={publish}/>
+            <div>
+                {#each $storeFE as item}
+                <svelte:component this={Speaker} objAttributes={item}/>
+                {/each}
+                <div class="add-topic-div">
+                    <ActionButton on:click={addSpeaker}/>
+                </div>
+            </div>
+            <div class="side-by-side">
+                <DatePicker bind:date error={dateError}/>
+                <TimePicker bind:time error={timeError}/>
+            </div>
+            <div class="side-by-side" style="margin-bottom: 20px">
+                <TextInput bind:value={venue} label="Venue / Platform" placeholder="Venue / Platform" error={venueError}/>
+                <TextInput bind:value={registrationLink} label="Registration Link" placeholder="Registration Link" error={registrationLinkError}/>
+            </div>
+            <CheckBox label="Post on Facebook Group" bind:checked={isPostFacebook}/>
+            <CheckBox label="Post on Telegram " bind:checked={isPostTelegram}/>
+            <CheckBox label="Send emails to departments" 
+                subText="Email will be sent to SET, A-Level, SFP, AUSMAT, DIIT. To edit, go to admin portal."
+                bind:checked={isSendDepartments}/>
+            <div class="publish-button-div">
+                <Button style="width: 50%" label="PUBLISH" on:click={publish}/>
+            </div>
         </div>
     </div>
 </div>
@@ -133,12 +139,26 @@
     }
     .content {
         margin-top: 50px;
-        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
     }
-    .page-header {
-        font: var(--primary-font-bold);
-        font-size: 35px;
-        margin-bottom: 30px
+    .page-subheader {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 2px var(--light-grey) solid;
+		margin-bottom: 20px;
+        padding-bottom: 10px;
+		width: 95%;
+	}
+	.subheader-text {
+		font: var(--primary-font-regular);
+		font-size: 10px;
+    }
+    .form {
+        width: 70%;
     }
     .side-by-side {
         display: grid;

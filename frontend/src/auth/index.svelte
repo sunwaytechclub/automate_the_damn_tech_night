@@ -34,7 +34,7 @@
 <div class="wrapper">
     <div class="section-form">
         <div class="section-form-content">
-            <img src="/assets/stc-logo.svg" alt="stc logo" class="logo">
+            <img src="/assets/sunwaytechclub-logo.svg" alt="stc logo" class="logo">
             <p class="title">Sign In</p>
             <TextInput bind:value={username} disabled={loading ? true : false}/>
             <TextInput bind:value={password} disabled={loading ? true : false} label="Password" placeholder="Password" type="password"/>
