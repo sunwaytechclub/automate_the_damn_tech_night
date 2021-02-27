@@ -103,6 +103,7 @@ body:
     {
       "speaker": 4,
       "title": "hehehe",
+      "hook": "How I wish there's a way to manage Telegram chat automatically... 🤔",
       "why": "huhuhu",
       "what": "hohohoh"
     }
@@ -127,6 +128,7 @@ body:
         "position": "head of marketing",
         "avatar": "/media/speakers/Group_99_iPRATzI.png"
       },
+      "hook": "How I wish there's a way to manage Telegram chat automatically... 🤔",
       "title": "hehehe",
       "why": "huhuhu",
       "what": "hohohoh",
