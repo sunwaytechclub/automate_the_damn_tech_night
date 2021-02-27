@@ -1,24 +1,23 @@
 <script>
-    export let icon = "/assets/icons/plus-circle-yellow.svg";
+    export let iconPath = "/assets/icons/plus-circle-yellow.svg";
     export let label = "Add Topic";
+    export let textColor = "var(--yellow)"
 </script>
 
 <div class="action-div">
-    <img src={icon} alt="plus" on:click/>
-    <p class="action-text">{label}</p>
+    <img src={iconPath} alt="plus" on:click/>
+    <p class="action-text" style="color: {textColor}">{label}</p>
 </div>
 
 <style>
-    img {
-        cursor: pointer;
-    }
     .action-div {
+        cursor: pointer;
         display: flex;
         align-items: center;
+        width: fit-content;
     }
     .action-text {
         display: inline;
-        color: var(--yellow);
         font: var(--primary-font-semibold);
         font-size: 14px;
         margin-left: 12px;
