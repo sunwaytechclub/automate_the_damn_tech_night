@@ -19,6 +19,8 @@ djangorestframework==3.12.2
     # via -r requirements.in
 pillow==8.1.0
     # via -r requirements.in
+python-dotenv==0.15.0
+    # via -r requirements.in
 pytz==2021.1
     # via django
 sqlparse==0.4.1
