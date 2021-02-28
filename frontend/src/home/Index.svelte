@@ -1,6 +1,6 @@
 <script>
     import SideNavbar from "@/components/SideNavbar.svelte"
-	import Event from "@/home/components/Event.svelte"
+	import EventCard from "@/home/components/EventCard.svelte"
 	import Header from "@/components/Header.svelte"
 	import pushState from "@/utils/pushState.js"
 
@@ -22,13 +22,13 @@
 			</div>
 		</div>
 		<div class="events">
-			<Event/>
-			<Event/>
-			<Event/>
-			<Event/>
-			<Event/>
-			<Event/>
-			<Event/>
+			<EventCard/>
+			<EventCard/>
+			<EventCard/>
+			<EventCard/>
+			<EventCard/>
+			<EventCard/>
+			<EventCard/>
 
 		</div>
     </div>
