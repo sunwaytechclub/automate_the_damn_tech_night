@@ -2,8 +2,11 @@
 	import { onDestroy } from "svelte";
 	import { Route, params } from "@/components/stores.js";
 	import router from "@/rootRoutes";
+	import Cookie from "js-cookie";
 
 	let uri = location.pathname;
+
+	if (uri != "/" && !Cookie.get('token')) window.location.href = "/"
 
 	function track(obj) {
 		uri = obj.state || obj.uri || location.pathname;

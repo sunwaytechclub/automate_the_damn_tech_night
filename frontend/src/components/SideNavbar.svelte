@@ -2,6 +2,8 @@
     import AlertDialog from "@/components/AlertDialog.svelte"
     import Button from "@/components/Button.svelte";
 
+    import Auth from "@/services/auth.js"
+
     let pathName = location.pathname
     export let navs = [
         {
@@ -23,8 +25,13 @@
 
     let logoutDialog = false
 
-    function logout() {
+    function showLogoutDialog() {
         logoutDialog = true;
+    }
+
+    function logout() {
+        Auth.logout();
+        window.location.href = "/"
     }
 </script>
 
@@ -33,7 +40,7 @@
 
     {#each navs as nav}
         {#if nav.navTitle == "Logout"}
-            <div class="navigation {pathName.includes(nav.navPath) ? "active" : ""}" on:click={logout}>
+            <div class="navigation {pathName.includes(nav.navPath) ? "active" : ""}" on:click={showLogoutDialog}>
                 <img src={nav.iconPath} alt="" class="nav-icon"/>
                 <p class="nav-title">{nav.navTitle}</p>
             </div>
@@ -52,7 +59,7 @@
         <p class="logout-message">Are you sure want to logout?</p>
         <div class="logout-button-div">
             <Button secondaryButton on:click={() => logoutDialog=false} label="Cancel"/>
-            <Button on:click label="Yes"/>
+            <Button on:click={logout} label="Yes"/>
         </div>
     </AlertDialog>
 {/if}

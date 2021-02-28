@@ -15,7 +15,7 @@ const router = Navaid("/", run(import("./404.svelte")));
 	router.on(route[0], route[1]);
 });
 
-[...AuthRouter("login")].map((route) => {
+[...AuthRouter("")].map((route) => {
 	router.on(route[0], route[1]);
 });
 

@@ -2,13 +2,15 @@
     import TextInput from '@/components/TextInput.svelte';
     import Button from '@/components/Button.svelte';
 
+    import Auth from "@/services/auth.js"
+
     let username = "";
     let password = "";
     let error;
     let errorMsg = "";
     let loading = false;
 
-    function signIn() {
+    async function signIn() {
         loading = true;
         let usernameValue = username.value
         let passwordValue = password.value
@@ -22,12 +24,22 @@
             loading = false;
             return error = true;
         }
-        error = false;
-        // loading = false;
-        
-        // TODO: POST auth
-        // window.location.href = "/form"
 
+        error = false;
+        
+        let token = await Auth.login({
+            username: usernameValue, 
+            password: passwordValue
+        })
+
+        if (!token) {
+            errorMsg = "Invalid username or password";
+            loading = false;
+            return error = true;
+        }
+        
+        Auth.storeTokenInCookie({token})
+        window.location.href = "/home"
     }
 </script>
 
