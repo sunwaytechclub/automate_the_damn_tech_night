@@ -72,7 +72,7 @@ https://forms.gle/mQrnZeDDtkSVSNwA6<br/>
         display: flex;
     }
     .content {
-        margin-top: 50px;
+        margin-top: 40px;
         display: flex;
         flex-direction: column;
         align-items: center;

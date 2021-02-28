@@ -9,8 +9,13 @@
     import Button from "@/components/Button.svelte"
 
     import { storeFE, idIncrement } from '@/components/stores.js';
+    import Speaker from "@/services/speaker.js"
+    import pushState from "@/utils/pushState";
 
-    let date = " 26 Feb 2021"
+    let name;
+    let position;
+    let avatar;
+
     let speakers = [
         {value: 'rain', label: 'Rain Chai'},
         {value: 'nick', label: 'Nick'},
@@ -18,6 +23,14 @@
         {value: 'lynus', label: 'Lynus'},
         {value: 'eason', label: 'Eason'},
     ];
+
+    let nameError = {};
+    let positionError = {};
+    let avatarError = {
+        enabled: false,
+        message: "Invalid"
+    }
+    let loading;
 
     $storeFE = [
 		{ id:1, topic: 'First option', caption: "additional note", speakers }
@@ -31,6 +44,47 @@
 		$storeFE[l] = { id:$idIncrement, topic: 'Another option', caption: "additional note", speakers };
 		console.log($storeFE);
 		$idIncrement++;	// increment our id to add additional items
+    }
+
+    async function createSpeaker() {
+ 
+        let nameValue = name.value
+        let positionValue = position.value
+
+        if (nameValue == "") {
+            nameError.enabled = true;
+            nameError.message = "Please fill in speaker name"
+            return
+        } else {
+            nameError.enabled = false;
+        }
+
+        if (positionValue == "") {
+            positionError.enabled = true;
+            positionError.message = "Please fill in speaker position"
+            return
+        } else {
+            positionError.enabled = false;
+        }
+
+        if (avatar == null) {
+            avatarError.enabled = true;
+            avatarError.message = "Please upload an avatar"
+            return
+        } else {
+            avatarError.enabled = false;
+        }
+
+        loading = true;
+
+        let response = await Speaker.createSpeaker({
+            name: nameValue,
+            position: positionValue,
+            avatar
+        })
+        if (response) {
+            pushState("/speakers")
+        }
     }
 </script>
 
@@ -46,22 +100,29 @@
                 <!-- svelte-ignore a11y-label-has-associated-control -->
                 <label>Avatar</label>
                 <div class="upload-div">
-                    <Dragndrop/>
+                    <Dragndrop bind:file={avatar}/>
+
+                    {#if avatarError.enabled}
+                        <p class="error-message">{avatarError.message}</p>
+                    {:else}
+                        <div class="error-spacer"></div>
+                    {/if}
                 </div>
             </div>
             <div>
-                <TextInput label="Name" placeholder="Name"/>
+                <TextInput bind:instance={name} label="Name" placeholder="Name" error={nameError} disabled={loading ? true : false}/>
             </div>
             <div>
-                {#each $storeFE as item}
+                <TextInput bind:instance={position} label="Position" placeholder="Position" error={positionError} disabled={loading ? true : false}/>
+                <!-- {#each $storeFE as item}
                 <svelte:component this={PositionField} objAttributes={item}/>
-                {/each}
-                <div class="add-topic-div">
+                {/each} -->
+                <!-- <div class="add-topic-div">
                     <ActionButton label="Add Position" on:click={addPosition}/>
-                </div>
+                </div> -->
             </div>
             <div class="confirm-button-div">
-                <Button style="width: 50%" label="CONFIRM"/>
+                <Button style="width: 50%" label="CONFIRM" on:click={createSpeaker} {loading}/>
             </div>
         </div>
     </div>
@@ -79,7 +140,7 @@
         display: flex;
     }
     .content {
-        margin-top: 50px;
+        margin-top: 40px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -121,6 +182,16 @@
         display: flex;
         justify-content: center;
         margin: 40px 0;
+    }
+    .error-message {
+        font: var(--primary-font-regular);
+        font-size: 12px;
+        color: var(--red);
+        margin-bottom: 15px;
+        margin-top: 5px;
+    }
+    .error-spacer {
+        height: 20px;
     }
     .alert-dialog {
         display: flex;

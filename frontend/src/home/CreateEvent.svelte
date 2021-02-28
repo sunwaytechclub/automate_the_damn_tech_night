@@ -7,28 +7,40 @@
     import TimePicker from "@/components/TimePicker.svelte"
     import SideNavbar from "@/components/SideNavbar.svelte"
     import Header from "@/components/Header.svelte"
-    import Speaker from "@/home/Speaker.svelte"
+    import SpeakerField from "@/home/components/SpeakerField.svelte"
+
+    import Event from "@/services/event.js"
 
     import { storeFE, idIncrement } from '@/components/stores.js';
 
-    let speakers = [
-        {value: 'rain', label: 'Rain Chai'},
-        {value: 'nick', label: 'Nick'},
-        {value: 'yong', label: 'Yong'},
-        {value: 'lynus', label: 'Lynus'},
-        {value: 'eason', label: 'Eason'},
-    ];
+    import Speaker from "@/services/speaker.js"
+	import { onMount } from "svelte";
 
-    $storeFE = [
-		{ id:1, topic: 'First option', caption: "additional note", speakers }
-            // other items can go here
-    ];
+	let speakers = []
+
+	onMount(async () => {
+		
+		let data = await Speaker.getAllSpeakers()
+		
+        for (let i = 0; i < data.length; i++) {
+            let speaker = {
+                label: data[i].name,
+                value: data[i].id
+            }
+            speakers.push(speaker)
+        }
+        $storeFE = [
+            { id:1, topic: '', hook: "", why: "", what: "", speakers }
+        ];
+	})
+
+    $storeFE = [];
 
     idIncrement.set(2); // this is a crude way to increment the id for new items
 
-    let isPostFacebook = true;
-    let isPostTelegram = true;
-    let isSendDepartments = false;
+    // let isPostFacebook = true;
+    // let isPostTelegram = true;
+    // let isSendDepartments = false;
 
     let episode;
     let date;
@@ -44,13 +56,13 @@
 
     function addSpeaker() {
         var l = $storeFE.length;	// get our current items list count
-		$storeFE[l] = { id:$idIncrement, topic: 'Another option', caption: "additional note", speakers };
+		$storeFE[l] = { id:$idIncrement, topic: '', caption: "", speakers };
 		console.log($storeFE);
 		$idIncrement++;	// increment our id to add additional items
     }
 
-    function publish() {
-        let episodeValue = episode.value
+    async function publish() {
+        let episodeValue = parseInt(episode.value, 10)
         let dateValue = date
         let timeValue = time
         let venueValue = venue.value
@@ -90,6 +102,35 @@
         } else {
             registrationLinkError.enabled = false;
         }
+
+        let topics = []
+
+        for (let i = 0; i < $storeFE.length; i++) {
+            let topic = {
+                speaker:  $storeFE[i].selectedSpeaker,
+                title: $storeFE[i].topic.value,
+                hook: $storeFE[i].hook.value,
+                why: $storeFE[i].why.value,
+                what: $storeFE[i].what.value
+            }
+            topics.push(topic)
+        }
+
+        let hours = timeValue.getHours()
+        let minutes = timeValue.getMinutes()
+
+        let day = dateValue.getDate()
+        let month = dateValue.getMonth()
+        let year = dateValue.getFullYear()
+
+        let datetime = new Date(year, month, day, hours, minutes)
+
+        let response = await Event.createEvent({
+            episode: episodeValue,
+            datetime,
+            topic: topics
+        })
+        console.log(response)
     }
 </script>
 
@@ -100,13 +141,16 @@
         <div class="page-subheader">
 			<p class="subheader-text">Create a tech night event</p>
 		</div>
+        {#await speakers}
+				<!-- TODO: loader -->
+			{:then}
         <div class="form">
             <div>
-                <TextInput bind:value={episode} label="Tech Night Episode" placeholder="Tech Night Episode" error={episodeError}/>
+                <TextInput bind:instance={episode} label="Tech Night Episode" placeholder="Tech Night Episode" error={episodeError} type="number"/>
             </div>
             <div>
                 {#each $storeFE as item}
-                <svelte:component this={Speaker} objAttributes={item}/>
+                <svelte:component this={SpeakerField} objAttributes={item}/>
                 {/each}
                 <div class="add-topic-div">
                     <ActionButton on:click={addSpeaker}/>
@@ -117,18 +161,19 @@
                 <TimePicker bind:time error={timeError}/>
             </div>
             <div class="side-by-side" style="margin-bottom: 20px">
-                <TextInput bind:value={venue} label="Venue / Platform" placeholder="Venue / Platform" error={venueError}/>
-                <TextInput bind:value={registrationLink} label="Registration Link" placeholder="Registration Link" error={registrationLinkError}/>
+                <TextInput bind:instance={venue} label="Venue / Platform" placeholder="Venue / Platform" error={venueError}/>
+                <TextInput bind:instance={registrationLink} label="Registration Link" placeholder="Registration Link" error={registrationLinkError}/>
             </div>
-            <CheckBox label="Post on Facebook Group" bind:checked={isPostFacebook}/>
+            <!-- <CheckBox label="Post on Facebook Group" bind:checked={isPostFacebook}/>
             <CheckBox label="Post on Telegram " bind:checked={isPostTelegram}/>
             <CheckBox label="Send emails to departments" 
                 subText="Email will be sent to SET, A-Level, SFP, AUSMAT, DIIT. To edit, go to admin portal."
-                bind:checked={isSendDepartments}/>
+                bind:checked={isSendDepartments}/> -->
             <div class="publish-button-div">
                 <Button style="width: 50%" label="PUBLISH" on:click={publish}/>
             </div>
         </div>
+        {/await}
     </div>
 </div>
 
@@ -138,7 +183,7 @@
         display: flex;
     }
     .content {
-        margin-top: 50px;
+        margin-top: 40px;
         display: flex;
         flex-direction: column;
         align-items: center;

@@ -4,32 +4,95 @@
     import ActionButton from "@/components/ActionButton.svelte"
     import Dragndrop from "@/components/Dragndrop.svelte"
     import AlertDialog from "@/components/AlertDialog.svelte"
-    import PositionField from "@/speaker/components/PositionField.svelte"
     import TextInput from "@/components/TextInput.svelte"
     import Button from "@/components/Button.svelte"
+    import pushState from "@/utils/pushState.js"
 
-    import { storeFE, idIncrement } from '@/components/stores.js';
+    import getLastSegUrl from "@/utils/getLastSegUrl.js"
+    import { onMount } from "svelte";
+    import Speaker from "@/services/speaker.js"
 
-    let date = " 26 Feb 2021"
-    let speakers = [
-        {value: 'rain', label: 'Rain Chai'},
-        {value: 'nick', label: 'Nick'},
-        {value: 'yong', label: 'Yong'},
-        {value: 'lynus', label: 'Lynus'},
-        {value: 'eason', label: 'Eason'},
-    ];
+    let speakerId = getLastSegUrl()
+    let speaker = {};
 
-    $storeFE = [
-		{ id:1, topic: 'First option', caption: "additional note", speakers }
-            // other items can go here
-    ];
+    onMount(async () => {
+        let data = await Speaker.getSpeaker({
+            id: speakerId
+        })
+        speaker = data
+        // name = speaker.name
+        // position = speaker.position
+        // avatar = speaker.avatar
+        })
 
-    idIncrement.set(2); // this is a crude way to increment the id for new items
+    let name = "";
+    let position = "";
+    let avatar;
 
-    let uploadDialog = false;
+    let nameError = {};
+    let positionError = {};
+    let avatarError = {
+        enabled: false,
+        message: "Invalid"
+    }
+    let loading;
 
-    function showUploadDialog() {
-        uploadDialog = !uploadDialog;
+    let avatarElement
+
+    let deleteDialog = false;
+
+    async function editSpeaker() {
+
+        let nameValue = name.value
+        let positionValue = position.value
+
+        if (nameValue == "") {
+            nameError.enabled = true;
+            nameError.message = "Please fill in speaker name"
+            return
+        } else {
+            nameError.enabled = false;
+        }
+
+        if (positionValue == "") {
+            positionError.enabled = true;
+            positionError.message = "Please fill in speaker position"
+            return
+        } else {
+            positionError.enabled = false;
+        }
+
+        if (avatar == null) {
+            avatarError.enabled = true;
+            avatarError.message = "Please upload an avatar"
+            return
+        } else {
+            avatarError.enabled = false;
+        }
+
+        loading = true;
+
+        let response = await Speaker.updateSpeaker({
+            id: speakerId,
+            name: name.value,
+            position: position.value,
+            avatar: avatar || null
+        })
+        console.log(response)
+        location.reload()
+    }
+
+    function showDeleteDialog() {
+        deleteDialog = true
+    }
+
+    async function deleteSpeaker() {
+        
+        let response = await Speaker.deleteSpeaker({
+            id: speakerId
+        })
+        console.log(response)
+        pushState("/speakers")
     }
 </script>
 
@@ -39,46 +102,66 @@
         <Header title="Edit speaker" previousPath="/speakers"/>
         <div class="page-subheader">
 			<p class="subheader-text">Create new speaker</p>
+            <ActionButton label="Delete Speaker" 
+                    iconPath="/assets/icons/user-x-red.svg" 
+                    textColor="var(--red)" on:click={showDeleteDialog}/>
 		</div>
-        <div class="form">
-            <div>
-                <!-- svelte-ignore a11y-label-has-associated-control -->
-                <label>Avatar</label>
-                <div class="avatar-div">
-                    <img src="/assets/example-avatar.png" alt="" class="avatar"/>
-                    <ActionButton label="Upload new avatar" iconPath="/assets/icons/upload-yellow.svg" on:click={showUploadDialog}/>
+        {#await speaker}
+            <!-- TODO: loader -->
+        {:then}
+        
+            <div class="form">
+                <div>
+                    <!-- svelte-ignore a11y-label-has-associated-control -->
+                    <label>Avatar</label>
+                    <div class="avatar-div">
+                        <div class="dialog-div">
+                            <p class="alert-dialog-title">Current avatar: </p>
+                            <img src={speaker.avatar} alt="" class="avatar" bind:this={avatarElement}/>
+                        </div>
+                        <!-- <ActionButton label="Upload new avatar" iconPath="/assets/icons/upload-yellow.svg" on:click={showUploadDialog}/> -->
+                        <div class="dialog-div">
+                            <p class="alert-dialog-title">Upload new avatar: </p>
+                            <div class="dragdrop-div">
+                                <Dragndrop bind:file={avatar}/>
+                                {#if avatarError.enabled}
+                                    <p class="error-message">{avatarError.message}</p>
+                                {:else}
+                                    <div class="error-spacer"></div>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <TextInput value={speaker.name} label="Name" placeholder="Name" bind:instance={name} error={nameError} disabled={loading ? true : false}/>
+                </div>
+                <div>
+                    <TextInput value={speaker.position} label="Position" placeholder="Position" bind:instance={position} error={positionError} disabled={loading ? true : false}/>
+                    <!-- {#each $storeFE as item}
+                    <svelte:component this={PositionField} objAttributes={item}/>
+                    {/each}
+                    <div class="add-topic-div">
+                        <ActionButton label="Add Position"/>
+                    </div> -->
+                </div>
+                <div class="confirm-button-div">
+                    <Button style="width: 50%" label="CONFIRM" on:click={editSpeaker} {loading}/>
                 </div>
             </div>
-            <div>
-                <TextInput label="Name" placeholder="Name"/>
-            </div>
-            <div>
-                {#each $storeFE as item}
-                <svelte:component this={PositionField} objAttributes={item}/>
-                {/each}
-                <div class="add-topic-div">
-                    <ActionButton label="Add Position"/>
-                </div>
-            </div>
-            <div class="confirm-button-div">
-                <Button style="width: 50%" label="CONFIRM"/>
-            </div>
-        </div>
+
+        {/await}
     </div>
 </div>
 
-{#if uploadDialog}
-    <AlertDialog bind:visible={uploadDialog}>
-        <div class="alert-dialog">
-            <div class="dialog-div">
-                <p class="alert-dialog-title">Upload avatar </p>
-                <div class="dragdrop-div">
-                    <Dragndrop/>
-                </div>
-                <Button style="margin-top: 20px" label="CONFIRM"/>
-            </div>
+{#if deleteDialog}
+    <AlertDialog bind:visible={deleteDialog}>
+        <p class="title">Are you sure?</p>
+        <p class="message">Are you sure want to delete {speaker.name}?</p>
+        <div class="button-div">
+            <Button secondaryButton label="Cancel" on:click={() => deleteDialog=false}/>
+            <Button on:click={deleteSpeaker} label="Yes"/>
         </div>
-        
     </AlertDialog>
 {/if}
 
@@ -94,7 +177,7 @@
         display: flex;
     }
     .content {
-        margin-top: 50px;
+        margin-top: 40px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -108,14 +191,26 @@
 		align-items: center;
 		justify-content: space-between;
 		border-bottom: 2px var(--light-grey) solid;
-		margin-bottom: 20px;
         padding-bottom: 10px;
+		margin-bottom: 20px;
 		width: 95%;
 	}
 	.subheader-text {
 		font: var(--primary-font-regular);
 		font-size: 10px;
         color: var(--dark-blue);
+	}
+    .create-button {
+		display: flex;
+		align-items: center;
+		padding: 10px;
+		cursor: pointer;
+	}
+	.create-text {
+		color: var(--purple-2);
+		font: var(--primary-font-semibold);
+		font-size: 14px;
+		margin-left: 5px;
 	}
     .avatar-div {
         display: flex;
@@ -124,6 +219,8 @@
     }
     .avatar {
         margin-right: 30px;
+        width: 200px;
+        height: 200px
     }
     .add-topic-div {
         border-bottom: 2px var(--light-grey) solid;
@@ -147,12 +244,33 @@
         flex-direction: column;
     }
     .alert-dialog-title {
+        font: var(--primary-font-medium);
+        margin-bottom: 10px;
+        font-size: 12px;
+    }
+    .title {
         font: var(--primary-font-bold);
+        font-size: 24px;
         margin-bottom: 20px;
-        font-size: 18px;
+    }
+    .message {
+        margin-bottom: 40px;
+    }
+    .button-div {
+        display: grid;
+        grid-template-columns: auto auto;
+        column-gap: 30px;
     }
     .alert-dialog-text {
         font: var(--primary-font-regular);
         font-size: 12px;
+    }
+    .error-message {
+        font: var(--primary-font-regular);
+        font-size: 12px;
+        color: var(--red);
+        margin-bottom: 15px;
+        margin-top: 5px;
+        position: absolute;
     }
 </style>

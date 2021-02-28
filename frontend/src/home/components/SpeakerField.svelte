@@ -7,6 +7,11 @@
     export let objAttributes = {};
     let selectedValue;
     let tempValue = ""
+    let id
+    let topic;
+    let hook;
+    let why;
+    let what;
 
     function handleSelect(event) {
         let value = event.detail.value
@@ -23,6 +28,7 @@
 
             return
         }
+        objAttributes.selectedSpeaker = event.detail.value
 
         selectedValue = null
     }
@@ -32,12 +38,14 @@
     <p class="speaker-header">Speaker #{objAttributes.id}</p>
 </div>
 <div class="side-by-side">
-    <TextInput label="Topic" placeholder="Topic" bind:value={objAttributes.topic}/>
-    <Dropdown label="Speaker name" placeholder="Speaker name" 
+    <TextInput label="Topic" placeholder="Topic" bind:instance={objAttributes.topic}/>
+    <Dropdown label="Speaker" placeholder="Speaker" 
         items={objAttributes.speakers} bind:selectedValue on:select={handleSelect}/>
 </div>
 <div>
-    <TextInput label="Caption" placeholder="Caption" bind:value={objAttributes.caption}/>
+    <TextInput label="Hook" placeholder="Hook" bind:instance={objAttributes.hook}/>
+    <TextInput label="Why" placeholder="Why?" bind:instance={objAttributes.why}/>
+    <TextInput label="What" placeholder="What?!" bind:instance={objAttributes.what}/>
 </div>
 
 <style>

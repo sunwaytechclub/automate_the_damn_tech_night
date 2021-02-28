@@ -2,20 +2,21 @@
     import Card from "@/components/Card.svelte"
     import pushState from "@/utils/pushState";
 
-    let speaker = {
+    export let speaker = {
         name: "Rain Chai Chang Cheng Cheng",
-        position: "STC Head of MarketingSTC Head of Marketing"
+        position: "STC Head of MarketingSTC Head of Marketing",
+        avatar: "/assets/example-avatar.png"
     }
 
-    function nagivateEvent() {
-        pushState("/speakers/speaker")
+    function nagivateEvent(id) {
+        pushState(`/speakers/speaker/${id}`)
     }
 </script>
 
-<div class="card-wrapper" on:click={nagivateEvent}>
+<div class="card-wrapper" on:click={nagivateEvent(speaker.id)}>
     <Card>
         <div class="wrapper">
-            <img src="/assets/example-avatar.png" alt="" class="avatar"/>
+            <img src={speaker.avatar} alt="" class="avatar"/>
             <div>
                 <p class="speaker-name">{speaker.name}</p>
                 <p class="speaker-position">{speaker.position}</p>
@@ -46,7 +47,8 @@
     .speaker-name {
         font: var(--primary-font-bold);
         font-size: 14px;
-        max-width: 170px;
+        max-width: 150px;
+        word-wrap: break-word;
     }
     .speaker-position {
         color: var(--dark-grey);

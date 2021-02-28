@@ -1,8 +1,23 @@
 <script>
     import SideNavbar from "@/components/SideNavbar.svelte"
+    import ActionButton from "@/components/ActionButton.svelte"
 	import SpeakerCard from "@/speaker/components/SpeakerCard.svelte"
 	import Header from "@/components/Header.svelte"
 	import pushState from "@/utils/pushState.js"
+
+	import Speaker from "@/services/speaker.js"
+	import { onMount } from "svelte";
+
+	let speakers = []
+
+	onMount(async () => {
+		
+		let response = await Speaker.getAllSpeakers()
+		speakers = response
+		console.log(speakers)
+	})
+
+	// $: allSpeakers = speakers
 
 	function navigateCreateEvent() {
 		pushState("/speakers/create-speaker")
@@ -16,20 +31,18 @@
         <Header title="Manage speakers"/>
 		<div class="page-subheader">
 			<p class="subheader-text">Manage spekers here!</p>
-			<div class="create-button" on:click={navigateCreateEvent}>
-				<img src="/assets/icons/user-plus.svg" alt=""/>
-				<p class="create-text">Add Speaker</p>
-			</div>
+			<ActionButton label="Create Speaker" 
+                    iconPath="/assets/icons/user-plus.svg" 
+                    textColor="var(--purple-2)" on:click={navigateCreateEvent}/>
 		</div>
 		<div class="events">
-			<SpeakerCard/>
-			<SpeakerCard/>
-			<SpeakerCard/>
-			<SpeakerCard/>
-			<SpeakerCard/>
-			<SpeakerCard/>
-			<SpeakerCard/>
-
+			{#await speakers}
+				<!-- TODO: loader -->
+			{:then}
+				{#each speakers as speaker}
+					<SpeakerCard speaker={speaker}/>
+				{/each}
+			{/await}
 		</div>
     </div>
 </div>
@@ -40,8 +53,8 @@
         display: flex;
     }
     .content {
-        margin-top: 50px;
-		max-width: 70%;
+        margin-top: 40px;
+		width: 70%;
     }
 	.page-subheader {
 		display: flex;

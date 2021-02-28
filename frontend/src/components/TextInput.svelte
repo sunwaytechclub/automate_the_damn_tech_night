@@ -2,19 +2,19 @@
     export let type = "text";
     export let placeholder = "Username";
     export let label = "Username";
-    export let value;
-    export let disabled;
+    export let disabled = false;
     export let error = {
         enabled: false,
         message: "Invalid"
     }
+    export let instance = undefined;
 </script>
 
 <div>
     <!-- svelte-ignore a11y-label-has-associated-control -->
     <label>{label}</label>
 
-    <input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}"{type} {placeholder} {disabled} {...$$restProps} bind:this={value}/>
+    <input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}" {type} {placeholder} {disabled} {...$$restProps} bind:this={instance}/>
     {#if error.enabled}
         <p class="error-message">{error.message}</p>
     {/if}

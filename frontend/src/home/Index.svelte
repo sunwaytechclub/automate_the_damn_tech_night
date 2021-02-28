@@ -4,6 +4,16 @@
 	import Header from "@/components/Header.svelte"
 	import pushState from "@/utils/pushState.js"
 
+	import Event from "@/services/event.js"
+	import { onMount } from "svelte";
+
+	onMount(async () => {
+		let events = await Event.getAllEvents()
+		console.log(events)
+	})
+
+	let events = []
+
 	function navigateCreateEvent() {
 		pushState("/home/create-event")
 	}
@@ -22,13 +32,9 @@
 			</div>
 		</div>
 		<div class="events">
-			<EventCard/>
-			<EventCard/>
-			<EventCard/>
-			<EventCard/>
-			<EventCard/>
-			<EventCard/>
-			<EventCard/>
+			{#each events as event}
+				<EventCard/>
+			{/each}
 
 		</div>
     </div>
@@ -40,8 +46,8 @@
         display: flex;
     }
     .content {
-        margin-top: 50px;
-		max-width: 70%;
+        margin-top: 40px;
+		width: 70%;
     }
 	.page-subheader {
 		display: flex;
