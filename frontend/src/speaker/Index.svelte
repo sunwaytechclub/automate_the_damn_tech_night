@@ -1,0 +1,74 @@
+<script>
+    import SideNavbar from "@/components/SideNavbar.svelte"
+	import SpeakerCard from "@/speaker/components/SpeakerCard.svelte"
+	import Header from "@/components/Header.svelte"
+	import pushState from "@/utils/pushState.js"
+
+	function navigateCreateEvent() {
+		pushState("/speakers/create-speaker")
+	}
+
+</script>
+
+<div class="wrapper">
+    <SideNavbar/>
+    <div class="content">
+        <Header title="Manage speakers"/>
+		<div class="page-subheader">
+			<p class="subheader-text">Manage spekers here!</p>
+			<div class="create-button" on:click={navigateCreateEvent}>
+				<img src="/assets/icons/user-plus.svg" alt=""/>
+				<p class="create-text">Add Speaker</p>
+			</div>
+		</div>
+		<div class="events">
+			<SpeakerCard/>
+			<SpeakerCard/>
+			<SpeakerCard/>
+			<SpeakerCard/>
+			<SpeakerCard/>
+			<SpeakerCard/>
+			<SpeakerCard/>
+
+		</div>
+    </div>
+</div>
+
+<style>
+    .wrapper {
+        width: 100%;
+        display: flex;
+    }
+    .content {
+        margin-top: 50px;
+		max-width: 70%;
+    }
+	.page-subheader {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 2px var(--light-grey) solid;
+		margin-bottom: 20px;
+		width: 95%;
+	}
+	.subheader-text {
+		font: var(--primary-font-regular);
+		font-size: 14px;
+	}
+	.events {
+		display: flex;
+		flex-wrap: wrap
+	}
+	.create-button {
+		display: flex;
+		align-items: center;
+		padding: 10px;
+		cursor: pointer;
+	}
+	.create-text {
+		color: var(--purple-2);
+		font: var(--primary-font-semibold);
+		font-size: 14px;
+		margin-left: 5px;
+	}
+</style>
