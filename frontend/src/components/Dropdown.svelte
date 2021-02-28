@@ -9,7 +9,7 @@
         {value: 'ice-cream', label: 'Ice Cream'},
         ];
 
-    export let selectedValue
+    export let selectedValue = ""
     export let placeholder = "Speaker name"
     export let label;
 

@@ -3,8 +3,8 @@
 
     export let label="Click Me"
     export let secondaryButton = false;
-    export let loading;
-    export let disabled;
+    export let loading = false;
+    export let disabled = false;
 </script>
 
 <button on:click {...$$restProps} class="{secondaryButton ? "secondary-button" : ""} {disabled || loading ? "disabled" : ""}" disabled={disabled || loading}>

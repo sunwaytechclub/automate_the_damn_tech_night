@@ -53,6 +53,8 @@
     {/each}
 </div>
 
+<div class="spacer"></div>
+
 {#if logoutDialog}
     <AlertDialog bind:visible={logoutDialog}>
         <p class="logout-title">Are you sure?</p>
@@ -65,13 +67,17 @@
 {/if}
 
 <style>
+    .spacer {
+        width: 250px;
+        margin-right: 100px;
+    }
     .wrapper {
         width: 250px;
         height: 100vh;
         background: #FFFFFF;
         box-shadow: 4px 24px 22px 13px rgba(0, 0, 0, 0.05);
-        margin-right: 100px;
         padding: 30px 40px;
+        position: fixed
     }
     .stc-icon {
         margin-bottom: 50px;
