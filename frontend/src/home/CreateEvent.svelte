@@ -15,6 +15,7 @@
 
     import Speaker from "@/services/speaker.js"
 	import { onMount } from "svelte";
+import pushState from "@/utils/pushState";
 
 	let speakers = []
 
@@ -130,7 +131,11 @@
             datetime,
             topic: topics
         })
-        console.log(response)
+
+        if (response) {
+            pushState("/home")
+        }
+
     }
 </script>
 

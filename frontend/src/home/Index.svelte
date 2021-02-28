@@ -8,14 +8,14 @@
 	import { onMount } from "svelte";
 
 	onMount(async () => {
-		let events = await Event.getAllEvents()
-		console.log(events)
+		let data = await Event.getAllEvents()
+		events = data
 	})
 
 	let events = []
 
 	function navigateCreateEvent() {
-		pushState("/home/create-event")
+		pushState("/home/create-event/")
 	}
 
 </script>
@@ -33,7 +33,7 @@
 		</div>
 		<div class="events">
 			{#each events as event}
-				<EventCard/>
+				<EventCard data={event}/>
 			{/each}
 
 		</div>

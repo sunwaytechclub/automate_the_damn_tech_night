@@ -2,6 +2,22 @@
     import SideNavbar from "@/components/SideNavbar.svelte"
     import Header from "@/components/Header.svelte"
     import ActionButton from "@/components/ActionButton.svelte"
+    import getLastSegUrl from "@/utils/getLastSegUrl.js"
+    import { onMount } from "svelte";
+
+    import EventAPI from "@/services/event.js"
+
+    let eventId = getLastSegUrl()
+
+    let event = {};
+
+    onMount(async () => {
+        let data  = await EventAPI.getEvent({
+            id: eventId
+        })
+        event = data;
+        console.log(event)
+    })
 
     let date = " 26 Feb 2021"
 </script>
@@ -9,9 +25,12 @@
 <div class="wrapper">
     <SideNavbar/>
     <div class="content">
-        <Header title="Tech Night #13" previousPath="/home"/>
+        {#await event}
+            <!-- TODO: loader -->
+        {:then}
+        <Header title="Tech Night #{event.episode}" previousPath="/home"/>
         <div class="page-subheader">
-			<p class="subheader-text">Created on {date}</p>
+			<p class="subheader-text">{date}</p>
 		</div>
         <div class="generated-content line">
             <div class="field-title">
@@ -21,37 +40,7 @@
                     textColor="var(--dark-blue)"/>
             </div>
             <div class="content-writeup">
-                *Tech Night #13 is here, back with streaming it live so you can watch it from the comfort of your own home!
-“No money for Ecommerce Store...what to do? 🥺"
-"How I wish there's a way to manage Telegram chat automatically... 🤔"
-"I got my design...but how would it look like on the product? 🤨"
-<br/>
-<br/>
-Tech Night Episode 13!
-This coming Friday, sharing LIVE from Facebook... Shong Yang, Rain ,and Nunu will be introducing you to...
-Free Ecommerce Storefront!
-Telegram Chatbot!
-Smartmockups in Canva!
-<br/>
-.
-<br/>
-❓ TECH NIGHT❓
-Friends share new stuff with friends bi-weekly on a Friday Night! It’s fun! It’s safe! Anyone can participate! 😮
-<br/>
-.
-<br/>
-❓TECH NIGHT ❓
-<br/>
-1. Curious about the world of Tech?<br/>
-2. Need a platform to share?<br/>
-Let us know what's up at the end of the𝐜𝐡 𝐍𝐢𝐠𝐡𝐭 🤩<br/>
-You’re probably also thinking?<br/>
-This is not a SaaS kay? It’s FREE!!! Just let us know you're coming 👀<br/>
-https://forms.gle/mQrnZeDDtkSVSNwA6<br/>
-.<br/>
-❓JOIN US Maybe ❓<br/>
-⏰ 19.2.2021 6.00PM<br/>
-📍 Facebook Live<br/>
+                {event.writeup}S
             </div>
         </div>
         <div class="generated-poster line">
@@ -61,8 +50,9 @@ https://forms.gle/mQrnZeDDtkSVSNwA6<br/>
                     iconPath="/assets/icons/download.svg" 
                     textColor="var(--dark-blue)"/>
             </div>
-            <img src="/assets/example-poster.jpg" alt="" class="poster"/>
+            <img src={event.poster} alt="" class="poster"/>
         </div>
+        {/await}
     </div>
 </div>
 
