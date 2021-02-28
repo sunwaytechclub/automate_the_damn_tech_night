@@ -4,16 +4,18 @@
 </script>
 
 {#if visible}
-    <div class="blur-background">
-        <div class="alert-div">
-            <p class="title">Are you sure?</p>
-            <p class="message">Are you sure want to delete Speaker #2?</p>
-            <div class="button-div">
-                <Button secondaryButton on:click={() => visible=false}/>
-                <Button on:click/>
+        <div class="blur-background">
+            <div class="alert-div">
+                <img src="/assets/icons/close-big.svg" alt="" class="close" on:click={()=>{visible = false}}/>
+                <slot></slot>
+                <!-- <p class="title">Are you sure?</p>
+                <p class="message">Are you sure want to delete Speaker #2?</p>
+                <div class="button-div">
+                    <Button secondaryButton on:click={() => visible=false}/>
+                    <Button on:click/>
+                </div> -->
             </div>
         </div>
-    </div>
 {/if}
 
 <style>
@@ -34,6 +36,13 @@
         border-radius: 5px;
         max-width: 700px;
         min-width: 600px;
+        position: relative;
+    }
+    .close {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        cursor: pointer;
     }
     .title {
         font: var(--primary-font-bold);
