@@ -4,8 +4,8 @@
     export let textColor = "var(--yellow)"
 </script>
 
-<div class="action-div">
-    <img src={iconPath} alt="plus" on:click/>
+<div class="action-div" {...$$restProps} on:click>
+    <img src={iconPath} alt="plus" />
     <p class="action-text" style="color: {textColor}">{label}</p>
 </div>
 
