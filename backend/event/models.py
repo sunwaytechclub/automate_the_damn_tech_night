@@ -19,7 +19,12 @@ class Topic(models.Model):
     title = models.CharField(max_length=58)
     why = models.CharField(max_length=58)
     what = models.CharField(max_length=58)
+    hook = models.CharField(max_length=69)
     poster = models.ImageField(upload_to="poster/speaker")
 
     def __str__(self):
         return self.title
+
+
+class Writeup(models.Model):
+    content = models.TextField()
