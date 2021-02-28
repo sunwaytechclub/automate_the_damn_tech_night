@@ -54,9 +54,4 @@
         content: '\a0';
         background-color: var(--light-grey)
     }
-    .side-by-side {
-        display: grid;
-        grid-template-columns: auto auto;
-        column-gap: 30px
-    }
 </style>

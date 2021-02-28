@@ -168,15 +168,6 @@
         width: 200px;
         margin-bottom: 30px;
     }
-    .avatar {
-        margin-right: 30px;
-    }
-    .add-topic-div {
-        border-bottom: 2px var(--light-grey) solid;
-        padding-bottom: 15px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
     .confirm-button-div {
         width: 100%;
         display: flex;
@@ -192,23 +183,5 @@
     }
     .error-spacer {
         height: 20px;
-    }
-    .alert-dialog {
-        display: flex;
-        justify-content: center;
-    }
-    .dialog-div {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-    }
-    .alert-dialog-title {
-        font: var(--primary-font-bold);
-        margin-bottom: 20px;
-        font-size: 18px;
-    }
-    .alert-dialog-text {
-        font: var(--primary-font-regular);
-        font-size: 12px;
     }
 </style>

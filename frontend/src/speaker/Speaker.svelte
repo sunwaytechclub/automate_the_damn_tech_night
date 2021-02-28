@@ -200,18 +200,6 @@
 		font-size: 10px;
         color: var(--dark-blue);
 	}
-    .create-button {
-		display: flex;
-		align-items: center;
-		padding: 10px;
-		cursor: pointer;
-	}
-	.create-text {
-		color: var(--purple-2);
-		font: var(--primary-font-semibold);
-		font-size: 14px;
-		margin-left: 5px;
-	}
     .avatar-div {
         display: flex;
         align-items: flex-end;
@@ -222,21 +210,11 @@
         width: 200px;
         height: 200px
     }
-    .add-topic-div {
-        border-bottom: 2px var(--light-grey) solid;
-        padding-bottom: 15px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
     .confirm-button-div {
         width: 100%;
         display: flex;
         justify-content: center;
         margin: 40px 0;
-    }
-    .alert-dialog {
-        display: flex;
-        justify-content: center;
     }
     .dialog-div {
         display: flex;
@@ -260,10 +238,6 @@
         display: grid;
         grid-template-columns: auto auto;
         column-gap: 30px;
-    }
-    .alert-dialog-text {
-        font: var(--primary-font-regular);
-        font-size: 12px;
     }
     .error-message {
         font: var(--primary-font-regular);
