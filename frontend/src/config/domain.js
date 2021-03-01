@@ -1,3 +1,3 @@
-const domain = "http://localhost:8000";
+const domain = "https://automatethedamntechnightapi.sunwaytechclub.org";
 
 export default domain;
