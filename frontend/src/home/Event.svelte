@@ -31,6 +31,7 @@
         textarea.select();
         document.execCommand("copy")
         copyText = "Copied"
+        document.body.removeChild(textarea);
     }
 
     async function downloadPoster() {
