@@ -1,61 +1,61 @@
 <script>
-    import SideNavbar from "@/components/SideNavbar.svelte"
-    import ActionButton from "@/components/ActionButton.svelte"
-	import SpeakerCard from "@/speaker/components/SpeakerCard.svelte"
-	import Header from "@/components/Header.svelte"
-	import pushState from "@/utils/pushState.js"
+	import SideNavbar from "@/components/SideNavbar.svelte";
+	import ActionButton from "@/components/ActionButton.svelte";
+	import SpeakerCard from "@/speaker/components/SpeakerCard.svelte";
+	import Header from "@/components/Header.svelte";
+	import pushState from "@/utils/pushState.js";
 
-	import Speaker from "@/services/speaker.js"
+	import Speaker from "@/services/speaker.js";
 	import { onMount } from "svelte";
 
-	let speakers = []
+	let speakers = [];
 
 	onMount(async () => {
-		
-		let response = await Speaker.getAllSpeakers()
-		speakers = response
-		console.log(speakers)
-	})
+		let response = await Speaker.getAllSpeakers();
+		speakers = response;
+		console.log(speakers);
+	});
 
 	// $: allSpeakers = speakers
 
 	function navigateCreateEvent() {
-		pushState("/speakers/create-speaker")
+		pushState("/speakers/create-speaker");
 	}
-
 </script>
 
 <div class="wrapper">
-    <SideNavbar/>
-    <div class="content">
-        <Header title="Manage speakers"/>
+	<div class="content">
+		<Header title="Manage speakers" />
 		<div class="page-subheader">
 			<p class="subheader-text">Manage spekers here!</p>
-			<ActionButton label="Create Speaker" 
-                    iconPath="/assets/icons/user-plus.svg" 
-                    textColor="var(--purple-2)" on:click={navigateCreateEvent}/>
+			<ActionButton
+				label="Create Speaker"
+				iconPath="/assets/icons/user-plus.svg"
+				textColor="var(--purple-2)"
+				on:click={navigateCreateEvent}
+			/>
 		</div>
 		<div class="events">
 			{#await speakers}
 				<!-- TODO: loader -->
 			{:then}
 				{#each speakers as speaker}
-					<SpeakerCard speaker={speaker}/>
+					<SpeakerCard {speaker} />
 				{/each}
 			{/await}
 		</div>
-    </div>
+	</div>
 </div>
 
 <style>
-    .wrapper {
-        width: 100%;
-        display: flex;
-    }
-    .content {
-        margin-top: 40px;
+	.wrapper {
+		width: 100%;
+		display: flex;
+	}
+	.content {
+		margin-top: 40px;
 		width: 70%;
-    }
+	}
 	.page-subheader {
 		display: flex;
 		align-items: center;
@@ -70,7 +70,7 @@
 	}
 	.events {
 		display: flex;
-		flex-wrap: wrap
+		flex-wrap: wrap;
 	}
 	.create-button {
 		display: flex;

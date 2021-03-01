@@ -1,54 +1,51 @@
 <script>
-    import SideNavbar from "@/components/SideNavbar.svelte"
-	import EventCard from "@/home/components/EventCard.svelte"
-	import Header from "@/components/Header.svelte"
-	import pushState from "@/utils/pushState.js"
+	import SideNavbar from "@/components/SideNavbar.svelte";
+	import EventCard from "@/home/components/EventCard.svelte";
+	import Header from "@/components/Header.svelte";
+	import pushState from "@/utils/pushState.js";
 
-	import Event from "@/services/event.js"
+	import Event from "@/services/event.js";
 	import { onMount } from "svelte";
 
 	onMount(async () => {
-		let data = await Event.getAllEvents()
-		events = data
-	})
+		let data = await Event.getAllEvents();
+		events = data;
+	});
 
-	let events = []
+	let events = [];
 
 	function navigateCreateEvent() {
-		pushState("/home/create-event/")
+		pushState("/home/create-event/");
 	}
-
 </script>
 
 <div class="wrapper">
-    <SideNavbar/>
-    <div class="content">
-        <Header title="Tech Night Event"/>
+	<div class="content">
+		<Header title="Tech Night Event" />
 		<div class="page-subheader">
 			<p class="subheader-text">Manage Tech Night here!</p>
 			<div class="create-button" on:click={navigateCreateEvent}>
-				<img src="/assets/icons/plus-circle-outline.svg" alt=""/>
+				<img src="/assets/icons/plus-circle-outline.svg" alt="" />
 				<p class="create-text">Create</p>
 			</div>
 		</div>
 		<div class="events">
 			{#each events as event}
-				<EventCard data={event}/>
+				<EventCard data={event} />
 			{/each}
-
 		</div>
-    </div>
+	</div>
 </div>
 
 <style>
-    .wrapper {
-        width: 100%;
-        display: flex;
-    }
-    .content {
-        margin-top: 40px;
+	.wrapper {
+		width: 100%;
+		display: flex;
+	}
+	.content {
+		margin-top: 20px;
 		width: 70%;
-    }
+	}
 	.page-subheader {
 		display: flex;
 		align-items: center;
@@ -63,7 +60,7 @@
 	}
 	.events {
 		display: flex;
-		flex-wrap: wrap
+		flex-wrap: wrap;
 	}
 	.create-button {
 		display: flex;
