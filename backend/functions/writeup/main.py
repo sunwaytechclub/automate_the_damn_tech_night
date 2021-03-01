@@ -46,8 +46,5 @@ def episode(data, event):
 
 
 def datetime(data, event):
-    try:
-        dt = pydatetime.strptime(data["datetime"], "%Y-%m-%dT%H:%M:%SZ")
-    except ValueError:
-        dt = pydatetime.strptime(data["datetime"], "%Y-%m-%dT%H:%M:%S0Z")
+    dt = pydatetime.fromisoformat(data["datetime"].replace("Z", "+00:00"))
     return dt.strftime("%d.%m.%Y %I:%M %p")
