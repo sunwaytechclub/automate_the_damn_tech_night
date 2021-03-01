@@ -1,4 +1,5 @@
 from event.models import Writeup, Speaker, Event
+from datetime import datetime as pydatetime
 import re
 
 
@@ -45,4 +46,8 @@ def episode(data, event):
 
 
 def datetime(data, event):
-    return event.datetime.strftime("%d.%m.%Y %I:%M %p")
+    try:
+        dt = pydatetime.strptime(data["datetime"], "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        dt = pydatetime.strptime(data["datetime"], "%Y-%m-%dT%H:%M:%S0Z")
+    return dt.strftime("%d.%m.%Y %I:%M %p")
