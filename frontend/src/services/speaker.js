@@ -27,9 +27,9 @@ export default {
 	 */
 	async createSpeaker({ name, position, avatar }) {
 		let formData = new FormData();
-		formData.append("name", name);
-		formData.append("position", position);
-		formData.append("avatar", avatar);
+		name && formData.append("name", name);
+		position && formData.append("position", position);
+		avatar && formData.append("avatar", avatar);
 
 		let speaker = await Network.authPostWithFormData({
 			path: "/api/v1/speaker/",
@@ -46,9 +46,9 @@ export default {
 	 */
 	async updateSpeaker({ id, name = null, position = null, avatar = null }) {
 		let formData = new FormData();
-		formData.append("name", name);
-		formData.append("position", position);
-		formData.append("avatar", avatar);
+		name && formData.append("name", name);
+		position && formData.append("position", position);
+		avatar && formData.append("avatar", avatar);
 
 		let speaker = await Network.authPatchWithFormData({
 			path: `/api/v1/speaker/${id}/`,
