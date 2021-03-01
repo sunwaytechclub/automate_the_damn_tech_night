@@ -2,7 +2,7 @@
 	import TextInput from "@/components/TextInput.svelte";
 	import Button from "@/components/Button.svelte";
 
-	import Auth from "@/services/auth.js";
+	import AuthAPI from "@/services/auth.js";
 
 	import { onDestroy } from "svelte";
 	import { disableNavbar } from "@/utils/store";
@@ -16,10 +16,12 @@
 	let error;
 	let errorMsg = "";
 	let loading = false;
+
 	async function signIn() {
 		loading = true;
-		let usernameValue = username.value;
-		let passwordValue = password.value;
+
+		const usernameValue = username.value;
+		const passwordValue = password.value;
 
 		if (usernameValue == "") {
 			errorMsg = "Please enter username";
@@ -33,7 +35,7 @@
 
 		error = false;
 
-		let token = await Auth.login({
+		const token = await AuthAPI.login({
 			username: usernameValue,
 			password: passwordValue,
 		});
@@ -44,7 +46,7 @@
 			return (error = true);
 		}
 
-		Auth.storeTokenInCookie({ token });
+		AuthAPI.storeTokenInCookie({ token });
 		window.location.href = "/home";
 	}
 </script>

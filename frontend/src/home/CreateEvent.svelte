@@ -232,7 +232,7 @@
         margin-bottom: 15px;
         margin-top: -10px;
     }
-	@media only screen and (max-width: 600px) {
+	@media only screen and (max-width: 966px) {
 		.content {
 			align-items: flex-start;
 		}

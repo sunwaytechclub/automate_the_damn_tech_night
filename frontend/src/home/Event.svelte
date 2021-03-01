@@ -1,5 +1,4 @@
 <script>
-	import SideNavbar from "@/components/SideNavbar.svelte";
 	import Header from "@/components/Header.svelte";
 	import ActionButton from "@/components/ActionButton.svelte";
 	import getLastSegUrl from "@/utils/getLastSegUrl.js";
@@ -7,7 +6,7 @@
 
 	import EventAPI from "@/services/event.js";
 
-	let eventId = getLastSegUrl();
+	const eventId = getLastSegUrl();
 
 	let event = {};
 	let writeupContainer;
@@ -15,9 +14,10 @@
 	let copyText = "Copy";
 
 	onMount(async () => {
-		let data = await EventAPI.getEvent({
+		const data = await EventAPI.getEvent({
 			id: eventId,
 		});
+
 		event = data;
 		content = event.writeup;
 		event.writeup = event.writeup.replace(/\n/g, "<br />");
@@ -137,7 +137,7 @@
 		border-bottom: 2px var(--light-grey) solid;
 		margin-bottom: 30px;
 	}
-	@media only screen and (max-width: 600px) {
+	@media only screen and (max-width: 966px) {
 		.generated-content {
 			margin-left: 5px;
 		}

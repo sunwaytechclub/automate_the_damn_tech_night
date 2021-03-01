@@ -1,5 +1,4 @@
 <script>
-	import SideNavbar from "@/components/SideNavbar.svelte";
 	import EventCard from "@/home/components/EventCard.svelte";
 	import Header from "@/components/Header.svelte";
 	import pushState from "@/utils/pushState.js";
@@ -8,7 +7,7 @@
 	import { onMount } from "svelte";
 
 	onMount(async () => {
-		let data = await Event.getAllEvents();
+		const data = await Event.getAllEvents();
 		events = data;
 	});
 
@@ -73,7 +72,7 @@
 		font-size: 14px;
 		margin-left: 5px;
 	}
-	@media only screen and (max-width: 600px) {
+	@media only screen and (max-width: 966px) {
 		.events {
 			justify-content: center;
 		}

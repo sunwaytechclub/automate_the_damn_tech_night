@@ -5,13 +5,9 @@
     import { storeFE, selectedSpeakers } from '@/components/stores.js';
 
     export let objAttributes = {};
+
     let selectedValue;
-    let tempValue = ""
-    let id
-    let topic;
-    let hook;
-    let why;
-    let what;
+    let tempValue = "";
 
     function handleSelect(event) {
         let value = event.detail.value

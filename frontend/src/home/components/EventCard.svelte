@@ -17,13 +17,13 @@
 
     let date = new Date(data.datetime);
     
-    var options = {
+    const options = {
         year: "numeric",
         month: "short",
         day: "numeric"
     };
 
-    let formattedDate = date.toLocaleDateString("en", options)
+    const formattedDate = date.toLocaleDateString("en", options)
 
     function nagivateEvent(id) {
         pushState(`/home/event/${id}`)
@@ -35,7 +35,6 @@
         <div class="wrapper">
             <div class="date">{formattedDate}</div>
             <div class="title">Tech Night #{data.episode}</div>
-
 
             {#each data.topic as topic, i}
                 {#if i < 2}

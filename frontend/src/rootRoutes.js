@@ -4,7 +4,6 @@
 import Navaid from "navaid";
 import HomeRouter from "@/home/routes";
 import AuthRouter from "@/auth/routes";
-import FormRouter from "@/form/routes";
 import SpeakerRouter from "@/speaker/routes";
 import run from "@/utils/run";
 
@@ -16,10 +15,6 @@ const router = Navaid("/", run(import("./404.svelte")));
 });
 
 [...AuthRouter("")].map((route) => {
-	router.on(route[0], route[1]);
-});
-
-[...FormRouter("form")].map((route) => {
 	router.on(route[0], route[1]);
 });
 
