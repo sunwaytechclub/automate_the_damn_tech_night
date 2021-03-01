@@ -47,6 +47,8 @@
 	let timeError = {};
 	let topicError = {}
 
+	let loading = false;
+
 	function addSpeaker() {
 		var l = $storeFE.length; // get our current items list count
 		$storeFE[l] = { id: $idIncrement, topic: "", caption: "", speakers };
@@ -109,6 +111,7 @@
 			topics.push(topic);
 		}
 
+		loading = true
 
 		let response = await Event.createEvent({
 			episode: parseInt(episodeValue, 10),
@@ -173,7 +176,7 @@
                 subText="Email will be sent to SET, A-Level, SFP, AUSMAT, DIIT. To edit, go to admin portal."
                 bind:checked={isSendDepartments}/> -->
 				<div class="publish-button-div">
-					<Button style="width: 50%" label="PUBLISH" on:click={publish} />
+					<Button style="width: 50%" label="PUBLISH" on:click={publish} {loading}/>
 				</div>
 			</div>
 		{/await}
