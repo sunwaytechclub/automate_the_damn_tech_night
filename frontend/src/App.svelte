@@ -5,6 +5,7 @@
 	import router from "@/rootRoutes";
 	import Cookie from "js-cookie";
 	import SideNavbar from "@/components/SideNavbar.svelte";
+	import { disableNavbar } from "@/utils/store";
 
 	let content;
 	let uri = location.pathname;
@@ -13,7 +14,7 @@
 	let toggle = false;
 
 	$: {
-		if (windowWidth < navbarCollapseInWidth) {
+		if (windowWidth < navbarCollapseInWidth && !$disableNavbar) {
 			document.body.style.setProperty("--main-display", "block");
 			content && content.style.setProperty("--content-padding", "15px");
 		} else {
@@ -41,10 +42,12 @@
 
 <svelte:window bind:innerWidth={windowWidth} />
 <main>
-	{#if windowWidth < navbarCollapseInWidth}
-		<Navbar bind:toggle />
-	{:else}
-		<SideNavbar />
+	{#if !$disableNavbar}
+		{#if windowWidth < navbarCollapseInWidth}
+			<Navbar bind:toggle />
+		{:else}
+			<SideNavbar />
+		{/if}
 	{/if}
 	<div class="content" bind:this={content}>
 		<svelte:component this={$Route} {$params} />
@@ -57,6 +60,7 @@
 		display: var(--main-display);
 	}
 	.content {
+		width: 100%;
 		padding-left: var(--content-padding);
 	}
 </style>
