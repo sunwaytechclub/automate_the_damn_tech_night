@@ -1,37 +1,48 @@
 <script>
-	import EventCard from "@/home/components/EventCard.svelte";
+	import SideNavbar from "@/components/SideNavbar.svelte";
+	import ActionButton from "@/components/ActionButton.svelte";
+	import SpeakerCard from "@/speaker/components/SpeakerCard.svelte";
 	import Header from "@/components/Header.svelte";
 	import pushState from "@/utils/pushState.js";
 
-	import Event from "@/services/event.js";
+	import Speaker from "@/services/speaker.js";
 	import { onMount } from "svelte";
 
+	let speakers = [];
+
 	onMount(async () => {
-		const data = await Event.getAllEvents();
-		events = data;
+		let response = await Speaker.getAllSpeakers();
+		speakers = response;
+		console.log(speakers);
 	});
 
-	let events = [];
+	// $: allSpeakers = speakers
 
 	function navigateCreateEvent() {
-		pushState("/home/create-event/");
+		pushState("/speakers/create-speaker");
 	}
 </script>
 
 <div class="wrapper">
 	<div class="content">
-		<Header title="Tech Night Event" />
+		<Header title="Manage speakers" />
 		<div class="page-subheader">
-			<p class="subheader-text">Manage Tech Night here!</p>
-			<div class="create-button" on:click={navigateCreateEvent}>
-				<img src="/assets/icons/plus-circle-outline.svg" alt="" />
-				<p class="create-text">Create</p>
-			</div>
+			<p class="subheader-text">Manage spekers here!</p>
+			<ActionButton
+				label="Create Speaker"
+				iconPath="/assets/icons/user-plus.svg"
+				textColor="var(--purple-2)"
+				on:click={navigateCreateEvent}
+			/>
 		</div>
 		<div class="events">
-			{#each events as event}
-				<EventCard data={event} />
-			{/each}
+			{#await speakers}
+				<!-- TODO: loader -->
+			{:then}
+				{#each speakers as speaker}
+					<SpeakerCard {speaker} />
+				{/each}
+			{/await}
 		</div>
 	</div>
 </div>
@@ -42,7 +53,8 @@
 		display: flex;
 	}
 	.content {
-		margin-top: 20px;
+		margin-top: 40px;
+		width: 100%;
 	}
 	.page-subheader {
 		display: flex;
@@ -72,7 +84,7 @@
 		font-size: 14px;
 		margin-left: 5px;
 	}
-	@media only screen and (max-width: 966px) {
+	@media only screen and (max-width: 600px) {
 		.events {
 			justify-content: center;
 		}
