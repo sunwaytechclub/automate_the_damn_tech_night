@@ -219,7 +219,7 @@
 		font-size: 10px;
 	}
 	.form {
-		width: 70%;
+		width: 90%;
 	}
 	.side-by-side {
 		display: grid;
