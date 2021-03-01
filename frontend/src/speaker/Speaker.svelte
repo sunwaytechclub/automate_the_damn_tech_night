@@ -62,14 +62,6 @@
             positionError.enabled = false;
         }
 
-        if (avatar == null) {
-            avatarError.enabled = true;
-            avatarError.message = "Please upload an avatar"
-            return
-        } else {
-            avatarError.enabled = false;
-        }
-
         loading = true;
 
         let response = await Speaker.updateSpeaker({
