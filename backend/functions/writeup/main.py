@@ -1,5 +1,6 @@
 from event.models import Writeup, Speaker, Event
-from datetime import datetime as pydatetime
+
+import dateutil.parser
 import re
 
 
@@ -46,5 +47,5 @@ def episode(data, event):
 
 
 def datetime(data, event):
-    dt = pydatetime.fromisoformat(data["datetime"].replace("Z", "+00:00"))
+    dt = dateutil.parser.isoparse(data["datetime"])
     return dt.strftime("%d.%m.%Y %I:%M %p")
