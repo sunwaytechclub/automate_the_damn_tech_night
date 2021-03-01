@@ -4,22 +4,44 @@
     import ActionButton from "@/components/ActionButton.svelte"
     import getLastSegUrl from "@/utils/getLastSegUrl.js"
     import { onMount } from "svelte";
+    import marked from "marked"
 
     import EventAPI from "@/services/event.js"
 
     let eventId = getLastSegUrl()
 
     let event = {};
+    let writeupContainer
+    let content;
 
     onMount(async () => {
         let data  = await EventAPI.getEvent({
             id: eventId
         })
         event = data;
-        console.log(event)
+        content = event.writeup
+        event.writeup = event.writeup.replace(/\n/g,"<br />");
+        writeupContainer.innerHTML = event.writeup
     })
 
     let date = " 26 Feb 2021"
+
+    function downloadWriteup() {
+        console.log(content.text())
+        document.execCommand("copy")
+    }
+
+    async function downloadPoster() {
+        const response = await fetch(event.poster)
+        const object = await response.blob()
+        const objectURL = URL.createObjectURL(object)
+        const link = document.createElement('a'); 
+        link.href = objectURL; 
+        link.setAttribute('download', `tech-night-poster-#${event.episode}.jpg`); 
+        link.setAttribute('style', 'display: none');
+        document.body.appendChild(link); 
+        link.click();
+    }
 </script>
 
 <div class="wrapper">
@@ -37,10 +59,9 @@
                 <p class="field-title-text">Generated Content</p>
                 <ActionButton label="Copy" 
                     iconPath="/assets/icons/copy.svg" 
-                    textColor="var(--dark-blue)"/>
+                    textColor="var(--dark-blue)" on:click={downloadWriteup}/>
             </div>
-            <div class="content-writeup">
-                {event.writeup}S
+            <div class="content-writeup" bind:this={writeupContainer}>
             </div>
         </div>
         <div class="generated-poster line">
@@ -48,7 +69,7 @@
                 <p class="field-title-text">Generated Poster</p>
                 <ActionButton label="Download" 
                     iconPath="/assets/icons/download.svg" 
-                    textColor="var(--dark-blue)"/>
+                    textColor="var(--dark-blue)" on:click={downloadPoster}/>
             </div>
             <img src={event.poster} alt="" class="poster"/>
         </div>
