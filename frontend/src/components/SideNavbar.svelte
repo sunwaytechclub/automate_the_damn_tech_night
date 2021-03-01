@@ -3,7 +3,8 @@
 	import Button from "@/components/Button.svelte";
 
 	import Auth from "@/services/auth.js";
-
+	import pushState from "@/utils/pushState";
+	
 	let pathName = location.pathname;
 	export let navs = [
 		{
@@ -25,6 +26,10 @@
 
 	let logoutDialog = false;
 
+	$: active = [
+		pathName.includes("/home") ? true : false, pathName.includes("/speakers") ? true : false
+	]
+
 	function showLogoutDialog() {
 		logoutDialog = true;
 	}
@@ -33,28 +38,41 @@
 		Auth.logout();
 		window.location.href = "/";
 	}
+
+	function navigateToPath(path) {
+		if (path == "/home") {
+			active = [
+				true, false
+			]
+		} else {
+			active = [
+				false, true
+			]
+		}
+		pushState(path)
+	}
 </script>
 
 <div class="wrapper">
 	<img src="/assets/stc-logo.svg" alt="stc logo" class="stc-icon" />
 
-	{#each navs as nav}
+	{#each navs as nav, i}
 		{#if nav.navTitle == "Logout"}
 			<div
 				class="navigation {pathName.includes(nav.navPath) ? 'active' : ''}"
+				id="navigation"
 				on:click={showLogoutDialog}
 			>
 				<img src={nav.iconPath} alt="" class="nav-icon" />
 				<p class="nav-title">{nav.navTitle}</p>
 			</div>
 		{:else}
-			<a
-				href={nav.navPath}
-				class="navigation {pathName.includes(nav.navPath) ? 'active' : ''}"
-			>
+			<div 
+				class="navigation {active[i] ? 'active' : ''}" 
+				on:click={navigateToPath(nav.navPath)}>
 				<img src={nav.iconPath} alt="" class="nav-icon" />
 				<p class="nav-title">{nav.navTitle}</p>
-			</a>
+			</div>
 		{/if}
 	{/each}
 </div>
@@ -127,5 +145,10 @@
 		display: grid;
 		grid-template-columns: auto auto;
 		column-gap: 30px;
+	}
+	@media only screen and (max-width: 600px) {
+		.logout-button-div {
+			display: block;
+		}
 	}
 </style>

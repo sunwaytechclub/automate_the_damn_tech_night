@@ -35,10 +35,10 @@
 </script>
 
 <div class="speaker-header-div">
-    <p class="speaker-header">Speaker #{objAttributes.id}</p>
+    <p class="speaker-header">Topic #{objAttributes.id}</p>
 </div>
 <div class="side-by-side">
-    <TextInput label="Topic" placeholder="Topic" bind:instance={objAttributes.topic}/>
+    <TextInput label="Topic Title" placeholder="Topic Title" bind:instance={objAttributes.topic}/>
     <Dropdown label="Speaker" placeholder="Speaker" 
         items={objAttributes.speakers} bind:selectedValue on:select={handleSelect}/>
 </div>
@@ -72,4 +72,12 @@
         grid-template-columns: auto auto;
         column-gap: 30px
     }
+    @media only screen and (max-width: 600px) {
+		.speaker-header:after {
+            width: 70%;
+        }
+        .side-by-side {
+            display: block
+        }
+	}
 </style>

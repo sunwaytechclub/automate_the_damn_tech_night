@@ -198,11 +198,10 @@
 		margin-top: 20px;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		width: 100%;
+		width: 95%;
 	}
 	.form {
-		width: 70%;
+		width: 100%;
 	}
 	.page-subheader {
 		display: flex;
@@ -264,5 +263,24 @@
 		margin-bottom: 15px;
 		margin-top: 5px;
 		position: absolute;
+	}
+	@media only screen and (max-width: 600px) {
+		.content {
+			align-items: center;
+		}
+		.avatar-div {
+			flex-direction: column;
+			align-items: center;
+		}
+		.avatar {
+			margin-right: 0;
+			margin-bottom: 10px;
+		}
+		.button-div {
+			display: block;
+		}
+		.form {
+			width: 80%;
+		}
 	}
 </style>

@@ -1,11 +1,9 @@
 <script>
 	import TextInput from "@/components/TextInput.svelte";
 	import ActionButton from "@/components/ActionButton.svelte";
-	import CheckBox from "@/components/CheckBox.svelte";
 	import Button from "@/components/Button.svelte";
 	import DatePicker from "@/components/DatePicker.svelte";
 	import TimePicker from "@/components/TimePicker.svelte";
-	import SideNavbar from "@/components/SideNavbar.svelte";
 	import Header from "@/components/Header.svelte";
 	import SpeakerField from "@/home/components/SpeakerField.svelte";
 
@@ -43,14 +41,11 @@
 	let episode;
 	let date;
 	let time;
-	let venue;
-	let registrationLink;
 
 	let episodeError = {};
 	let dateError = {};
 	let timeError = {};
-	let venueError = {};
-	let registrationLinkError = {};
+	let topicError = {}
 
 	function addSpeaker() {
 		var l = $storeFE.length; // get our current items list count
@@ -60,11 +55,9 @@
 	}
 
 	async function publish() {
-		let episodeValue = parseInt(episode.value, 10);
+		let episodeValue = episode.value;
 		let dateValue = date;
 		let timeValue = time;
-		let venueValue = venue.value;
-		let registrationLinkValue = registrationLink.value;
 
 		if (episodeValue == "") {
 			episodeError.enabled = true;
@@ -82,28 +75,30 @@
 
 		if (timeValue == null) {
 			timeError.enabled = true;
-			timeError.message = "Please select a time";
+			return timeError.message = "Please select a time";
 		} else {
 			timeError.enabled = false;
 		}
+		
+		let hours = timeValue.getHours();
+		let minutes = timeValue.getMinutes();
 
-		if (venueValue == "") {
-			venueError.enabled = true;
-			venueError.message = "Please fill in venue or platform";
-		} else {
-			venueError.enabled = false;
-		}
-
-		if (registrationLinkValue == "") {
-			registrationLinkError.enabled = true;
-			registrationLinkError.message = "Please fill in registration link";
-		} else {
-			registrationLinkError.enabled = false;
-		}
+		let day = dateValue.getDate();
+		let month = dateValue.getMonth();
+		let year = dateValue.getFullYear();
+		
+		let datetime = new Date(year, month, day, hours, minutes);
 
 		let topics = [];
 
 		for (let i = 0; i < $storeFE.length; i++) {
+
+			if ($storeFE[i].selectedSpeaker == undefined || $storeFE[i].topic.value == "" || $storeFE[i].hook.value == "" ||
+				$storeFE[i].why.value == "" || $storeFE[i].what.value == "") {
+					topicError.message = "Please fill in all the topic fields"
+					return topicError.enabled = true
+			}
+
 			let topic = {
 				speaker: $storeFE[i].selectedSpeaker,
 				title: $storeFE[i].topic.value,
@@ -114,30 +109,19 @@
 			topics.push(topic);
 		}
 
-		let hours = timeValue.getHours();
-		let minutes = timeValue.getMinutes();
-
-		let day = dateValue.getDate();
-		let month = dateValue.getMonth();
-		let year = dateValue.getFullYear();
-
-		let datetime = new Date(year, month, day, hours, minutes);
 
 		let response = await Event.createEvent({
-			episode: episodeValue,
+			episode: parseInt(episodeValue, 10),
 			datetime,
 			topic: topics,
 		});
-
-		if (response) {
-			pushState("/home");
-		}
+		pushState("/home");
 	}
 </script>
 
 <div class="wrapper">
 	<div class="content">
-		<Header title="New Tech Night Event" previousPath="/home" />
+		<Header title="Create Event" previousPath="/home" />
 		<div class="page-subheader">
 			<p class="subheader-text">Create a tech night event</p>
 		</div>
@@ -161,12 +145,15 @@
 					<div class="add-topic-div">
 						<ActionButton on:click={addSpeaker} />
 					</div>
+					{#if topicError.enabled}
+						<p class="error-message">{topicError.message}</p>
+					{/if}
 				</div>
 				<div class="side-by-side">
 					<DatePicker bind:date error={dateError} />
 					<TimePicker bind:time error={timeError} />
 				</div>
-				<div class="side-by-side" style="margin-bottom: 20px">
+				<!-- <div class="side-by-side" style="margin-bottom: 20px">
 					<TextInput
 						bind:instance={venue}
 						label="Venue / Platform"
@@ -179,7 +166,7 @@
 						placeholder="Registration Link"
 						error={registrationLinkError}
 					/>
-				</div>
+				</div> -->
 				<!-- <CheckBox label="Post on Facebook Group" bind:checked={isPostFacebook}/>
             <CheckBox label="Post on Telegram " bind:checked={isPostTelegram}/>
             <CheckBox label="Send emails to departments" 
@@ -237,5 +224,23 @@
 		display: flex;
 		justify-content: center;
 		margin: 40px 0;
+	}
+	.error-message {
+        font: var(--primary-font-regular);
+        font-size: 12px;
+        color: var(--red);
+        margin-bottom: 15px;
+        margin-top: -10px;
+    }
+	@media only screen and (max-width: 600px) {
+		.content {
+			align-items: flex-start;
+		}
+		.form {
+			margin-left: 10px;
+		}
+		.side-by-side {
+            display: block
+        }
 	}
 </style>

@@ -102,14 +102,16 @@
 			<div>
 				<!-- svelte-ignore a11y-label-has-associated-control -->
 				<label>Avatar</label>
-				<div class="upload-div">
-					<Dragndrop bind:file={avatar} />
+				<div class="upload-div-wrapper">
+					<div class="upload-div">
+						<Dragndrop bind:file={avatar} />
 
-					{#if avatarError.enabled}
-						<p class="error-message">{avatarError.message}</p>
-					{:else}
-						<div class="error-spacer" />
-					{/if}
+						{#if avatarError.enabled}
+							<p class="error-message">{avatarError.message}</p>
+						{:else}
+							<div class="error-spacer" />
+						{/if}
+					</div>
 				</div>
 			</div>
 			<div>
@@ -163,11 +165,10 @@
 		margin-top: 20px;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		width: 100%;
 	}
 	.form {
-		width: 70%;
+		width: 100%;
 	}
 	.page-subheader {
 		display: flex;
@@ -203,5 +204,17 @@
 	}
 	.error-spacer {
 		height: 20px;
+	}
+	@media only screen and (max-width: 600px) {
+		.content {
+			align-items: center;
+		}
+		.form {
+			width: 80%;
+		}
+		.upload-div-wrapper {
+			display: flex;
+			justify-content: center;
+		}
 	}
 </style>

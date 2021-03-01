@@ -52,6 +52,8 @@
 		top: 0;
 		left: 0;
 		width: 100vw;
+		z-index: 5;
+		background-color: var(--white);
 		/* Effect */
 		box-shadow: 24px 4px 22px 13px rgba(0, 0, 0, 0.05);
 	}

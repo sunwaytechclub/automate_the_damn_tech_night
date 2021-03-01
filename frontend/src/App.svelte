@@ -25,6 +25,8 @@
 
 	if (uri != "/" && !Cookie.get("token")) window.location.href = "/";
 
+	if (uri == "/" && Cookie.get("token")) window.location.href = "/home";
+
 	function track(obj) {
 		toggle = false;
 		uri = obj.state || obj.uri || location.pathname;

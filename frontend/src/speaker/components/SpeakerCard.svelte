@@ -60,4 +60,9 @@
         top: 20px;
         width: 18px;
     }
+    @media only screen and (max-width: 600px) {
+		.card-wrapper {
+            width: 300px;
+        }
+	}
 </style>

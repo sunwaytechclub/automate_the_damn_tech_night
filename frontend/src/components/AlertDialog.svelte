@@ -1,5 +1,4 @@
 <script>
-    import Button from "@/components/Button.svelte";
     export let visible = false;
 </script>
 
@@ -8,12 +7,6 @@
             <div class="alert-div">
                 <img src="/assets/icons/close-big.svg" alt="" class="close" on:click={()=>{visible = false}}/>
                 <slot></slot>
-                <!-- <p class="title">Are you sure?</p>
-                <p class="message">Are you sure want to delete Speaker #2?</p>
-                <div class="button-div">
-                    <Button secondaryButton on:click={() => visible=false}/>
-                    <Button on:click/>
-                </div> -->
             </div>
         </div>
 {/if}
@@ -22,6 +15,7 @@
     .blur-background {
         position: fixed;
         top: 0;
+        left: 0;
         height: 100vh;
         width: 100vw;
         background-color: rgba(0, 0, 0, 0.5);
@@ -44,18 +38,10 @@
         top: 20px;
         cursor: pointer;
     }
-    .title {
-        font: var(--primary-font-bold);
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
-    .message {
-        font: var(--primary-font-semibold);
-        margin-bottom: 40px;
-    }
-    .button-div {
-        display: grid;
-        grid-template-columns: auto auto;
-        column-gap: 30px;
-    }
+    @media only screen and (max-width: 600px) {
+		.alert-div {
+            min-width: 0;
+            width: 350px;
+        }
+	}
 </style>

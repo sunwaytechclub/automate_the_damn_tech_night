@@ -54,7 +54,7 @@
 		{:then}
 			<Header title="Tech Night #{event.episode}" previousPath="/home" />
 			<div class="page-subheader">
-				<p class="subheader-text">{event.datetime}</p>
+				<!-- <p class="subheader-text">{formattedDate}</p> -->
 			</div>
 			<div class="generated-content line">
 				<div class="field-title">
@@ -93,7 +93,6 @@
 		margin-top: 20px;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		width: 100%;
 	}
 	.page-subheader {
@@ -137,5 +136,10 @@
 		padding-bottom: 20px;
 		border-bottom: 2px var(--light-grey) solid;
 		margin-bottom: 30px;
+	}
+	@media only screen and (max-width: 600px) {
+		.generated-content {
+			margin-left: 5px;
+		}
 	}
 </style>

@@ -54,7 +54,7 @@
 	}
 	.content {
 		margin-top: 40px;
-		width: 70%;
+		width: 100%;
 	}
 	.page-subheader {
 		display: flex;
@@ -83,5 +83,10 @@
 		font: var(--primary-font-semibold);
 		font-size: 14px;
 		margin-left: 5px;
+	}
+	@media only screen and (max-width: 600px) {
+		.events {
+			justify-content: center;
+		}
 	}
 </style>
