@@ -12,6 +12,7 @@
 	let event = {};
 	let writeupContainer;
 	let content;
+	let copyText = "Copy";
 
 	onMount(async () => {
 		let data = await EventAPI.getEvent({
@@ -23,7 +24,15 @@
 		writeupContainer.innerHTML = event.writeup;
 	});
 
-	let date = " 26 Feb 2021";
+	function copyWriteup() {
+		const textarea = document.createElement("textarea");
+		textarea.value = content;
+		document.body.appendChild(textarea);
+		textarea.select();
+		document.execCommand("copy");
+		copyText = "Copied";
+		document.body.removeChild(textarea);
+	}
 
 	async function downloadPoster() {
 		const response = await fetch(event.poster);
@@ -45,15 +54,16 @@
 		{:then}
 			<Header title="Tech Night #{event.episode}" previousPath="/home" />
 			<div class="page-subheader">
-				<p class="subheader-text">{date}</p>
+				<p class="subheader-text">{event.datetime}</p>
 			</div>
 			<div class="generated-content line">
 				<div class="field-title">
 					<p class="field-title-text">Generated Content</p>
 					<ActionButton
-						label="Copy"
+						label={copyText}
 						iconPath="/assets/icons/copy.svg"
 						textColor="var(--dark-blue)"
+						on:click={copyWriteup}
 					/>
 				</div>
 				<div class="content-writeup" bind:this={writeupContainer} />
