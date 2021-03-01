@@ -4,7 +4,6 @@
     import ActionButton from "@/components/ActionButton.svelte"
     import getLastSegUrl from "@/utils/getLastSegUrl.js"
     import { onMount } from "svelte";
-    import marked from "marked"
 
     import EventAPI from "@/services/event.js"
 
@@ -25,11 +24,6 @@
     })
 
     let date = " 26 Feb 2021"
-
-    function downloadWriteup() {
-        console.log(content.text())
-        document.execCommand("copy")
-    }
 
     async function downloadPoster() {
         const response = await fetch(event.poster)
@@ -59,7 +53,7 @@
                 <p class="field-title-text">Generated Content</p>
                 <ActionButton label="Copy" 
                     iconPath="/assets/icons/copy.svg" 
-                    textColor="var(--dark-blue)" on:click={downloadWriteup}/>
+                    textColor="var(--dark-blue)"/>
             </div>
             <div class="content-writeup" bind:this={writeupContainer}>
             </div>
