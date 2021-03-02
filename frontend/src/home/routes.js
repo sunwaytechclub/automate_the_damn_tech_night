@@ -6,5 +6,6 @@ let ROUTES = [
     ['/', run(import("./Index.svelte"))],
     ['/create-event', run(import("./CreateEvent.svelte"))],
     ['/event/:id', run(import("./Event.svelte"))],
+    ['/event/edit/:id', run(import("./EditEvent.svelte"))],
 ]
 export default Router(ROUTES)

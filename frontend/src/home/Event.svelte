@@ -5,6 +5,7 @@
 	import { onMount } from "svelte";
 
 	import EventAPI from "@/services/event.js";
+	import pushState from "@/utils/pushState";
 
 	const eventId = getLastSegUrl();
 
@@ -45,6 +46,10 @@
 		document.body.appendChild(link);
 		link.click();
 	}
+
+	function navigateEditEvent() {
+		pushState(`/home/event/edit/${event.id}`)
+	}
 </script>
 
 <div class="wrapper">
@@ -54,7 +59,13 @@
 		{:then}
 			<Header title="Tech Night #{event.episode}" previousPath="/home" />
 			<div class="page-subheader">
-				<!-- <p class="subheader-text">{formattedDate}</p> -->
+				<p class="subheader-text"></p>
+				<ActionButton
+					label="Edit"
+					iconPath="/assets/icons/edit-purple.svg"
+					textColor="var(--purple-2)"
+					on:click={navigateEditEvent}
+				/>
 			</div>
 			<div class="generated-content line">
 				<div class="field-title">

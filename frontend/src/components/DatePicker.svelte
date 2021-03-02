@@ -11,9 +11,11 @@
         message: "Invalid"
     }
     export let disabled = false;
+    export let defaultDate = "";
     
     const flatpickrOptions = {
-        element: '#my-date-picker'
+        element: '#my-date-picker',
+        defaultDate: defaultDate
     }
     
 </script>
@@ -23,7 +25,7 @@
 
     <Flatpickr options="{ flatpickrOptions }" bind:value={date} element="#my-date-picker">
         <div class="flatpickr" id="my-date-picker">
-            <input type="text" placeholder="Select Date.." data-input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}" {disabled}>
+            <input type="text" placeholder="Select Date.." data-input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}" {disabled} value={defaultDate.split('T')[0]}>
             {#if error.enabled}
                 <p class="error-message">{error.message}</p>
             {/if}

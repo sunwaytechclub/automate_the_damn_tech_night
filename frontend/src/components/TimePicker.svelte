@@ -3,6 +3,7 @@
 
     import 'flatpickr/dist/flatpickr.css'
     import 'flatpickr/dist/themes/light.css'
+    import { onMount } from 'svelte';
 
     export let time = null
     export let label = "Time"
@@ -11,23 +12,25 @@
         message: "Invalid"
     }
     export let disabled = false;
+    export let defaultHour = 12;
+    export let defaultMinutes = 0
     
     const flatpickrOptions = {
         element: '#my-time-picker',
         enableTime: true,
         noCalendar: true,
         dateFormat: "H:i",
+        defaultHour: defaultHour,
+        defaultMinute: defaultMinutes
     }
-    
 </script>
 
 <div>
     <!-- svelte-ignore a11y-label-has-associated-control -->
     <label>{label}</label>
-
     <Flatpickr options="{ flatpickrOptions }" bind:value={time} element="#my-time-picker">
         <div class="flatpickr" id="my-time-picker">
-            <input type="text" placeholder="Select Time.." data-input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}" {disabled}>
+            <input type="text" placeholder="Select Time.." data-input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}" {disabled} value="{defaultHour}:{defaultMinutes}">
             {#if error.enabled}
                 <p class="error-message">{error.message}</p>
             {/if}

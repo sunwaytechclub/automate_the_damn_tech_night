@@ -14,7 +14,7 @@
     <!-- svelte-ignore a11y-label-has-associated-control -->
     <label>{label}</label>
 
-    <input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}" {type} {placeholder} {disabled} {...$$restProps} bind:this={instance}/>
+    <input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}" {type} {placeholder} {disabled} {...$$restProps} bind:this={instance} on:keyup/>
     {#if error.enabled}
         <p class="error-message">{error.message}</p>
     {/if}

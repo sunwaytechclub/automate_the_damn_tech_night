@@ -1,5 +1,4 @@
 <script>
-	import SideNavbar from "@/components/SideNavbar.svelte";
 	import Header from "@/components/Header.svelte";
 	import ActionButton from "@/components/ActionButton.svelte";
 	import Dragndrop from "@/components/Dragndrop.svelte";
@@ -7,43 +6,77 @@
 	import TextInput from "@/components/TextInput.svelte";
 	import Button from "@/components/Button.svelte";
 	import pushState from "@/utils/pushState.js";
+	import PositionField from "@/speaker/components/PositionField.svelte";
 
 	import getLastSegUrl from "@/utils/getLastSegUrl.js";
-	import { onMount } from "svelte";
-	import Speaker from "@/services/speaker.js";
+	import SpeakerAPI from "@/services/speaker.js";
+
+	import { storeSpeaker, idIncrement, storeSpeakerPositions, listPositions} from "@/components/stores.js";
+	import { onMount, onDestroy } from "svelte";
 
 	let speakerId = getLastSegUrl();
 	let speaker = {};
-
+	let positions = []
+	
 	onMount(async () => {
-		let data = await Speaker.getSpeaker({
+		let data = await SpeakerAPI.getSpeaker({
 			id: speakerId,
 		});
 		speaker = data;
-		// name = speaker.name
-		// position = speaker.position
-		// avatar = speaker.avatar
+		$storeSpeaker = speaker
+		
+		let tempPositions = speaker.position.split("\n")
+		
+		for (let i = 0; i < tempPositions.length; i++) {
+			let positionObj = {
+				id: i + 1,
+				position: tempPositions[i]
+			}
+			$listPositions.push(tempPositions[i])
+			$storeSpeakerPositions.push(positionObj)
+		}
+		positions = $storeSpeakerPositions
+		$idIncrement = $storeSpeakerPositions.length + 1
 	});
 
+	onDestroy(() => {
+		$listPositions = [];
+		$storeSpeakerPositions = []
+		$idIncrement = 0
+	});
+	
 	let name = "";
-	let position = "";
 	let avatar;
-
+	let loading;
+	let avatarElement;
+	let deleteDialog = false;
+	
 	let nameError = {};
 	let positionError = {};
 	let avatarError = {
 		enabled: false,
 		message: "Invalid",
 	};
-	let loading;
+	let maxPositionError = {
+		enabled: false,
+		message: "You can only add up to 3 positions"
+	}
 
-	let avatarElement;
-
-	let deleteDialog = false;
+	function addPosition() {
+		var l = $storeSpeakerPositions.length; // get our current items list count
+		if (l >= 3) {
+			return maxPositionError.enabled = true
+		} 
+		$storeSpeakerPositions[l] = {
+			id: $idIncrement,
+			position: ""
+		};
+		$idIncrement++; // increment our id to add additional items
+	}
 
 	async function editSpeaker() {
 		let nameValue = name.value;
-		let positionValue = position.value;
+		let positionValue = ""
 
 		if (nameValue == "") {
 			nameError.enabled = true;
@@ -53,23 +86,27 @@
 			nameError.enabled = false;
 		}
 
-		if (positionValue == "") {
-			positionError.enabled = true;
-			positionError.message = "Please fill in speaker position";
-			return;
-		} else {
-			positionError.enabled = false;
+		for (let i = 0; i < $storeSpeakerPositions.length; i++) {
+
+		if ($storeSpeakerPositions[i].position.value == "") {
+				positionError.message = "Please fill in position(s)"
+				return positionError.enabled = true
+			}
+
+			let position = $storeSpeakerPositions[i].position.value
+
+			positionValue += `${position}\n`;
 		}
 
 		loading = true;
 
-		let response = await Speaker.updateSpeaker({
+		let response = await SpeakerAPI.updateSpeaker({
 			id: speakerId,
 			name: name.value,
-			position: position.value,
+			position: positionValue,
 			avatar: avatar || null,
 		});
-		console.log(response);
+
 		location.reload();
 	}
 
@@ -78,10 +115,9 @@
 	}
 
 	async function deleteSpeaker() {
-		let response = await Speaker.deleteSpeaker({
+		let response = await SpeakerAPI.deleteSpeaker({
 			id: speakerId,
 		});
-		console.log(response);
 		pushState("/speakers");
 	}
 </script>
@@ -98,9 +134,9 @@
 				on:click={showDeleteDialog}
 			/>
 		</div>
-		{#await speaker}
+		{#if positions.length == 0}
 			<!-- TODO: loader -->
-		{:then}
+		{:else}
 			<div class="form">
 				<div>
 					<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -140,20 +176,18 @@
 					/>
 				</div>
 				<div>
-					<TextInput
-						value={speaker.position}
-						label="Position"
-						placeholder="Position"
-						bind:instance={position}
-						error={positionError}
-						disabled={loading ? true : false}
-					/>
-					<!-- {#each $storeFE as item}
-                    <svelte:component this={PositionField} objAttributes={item}/>
-                    {/each}
-                    <div class="add-topic-div">
-                        <ActionButton label="Add Position"/>
-                    </div> -->
+					{#each $storeSpeakerPositions as item, i}
+                		<svelte:component this={PositionField} objAttributes={item} disabled={loading ? true : false}/>
+					{/each}
+					<div class="add-topic-div">
+						<ActionButton label="Add Position" on:click={addPosition}/>
+					</div>
+					{#if maxPositionError.enabled}
+						<p class="error-message">{maxPositionError.message}</p>
+					{/if}
+					{#if positionError.enabled}
+						<p class="error-message">{positionError.message}</p>
+					{/if}
 				</div>
 				<div class="confirm-button-div">
 					<Button
@@ -164,7 +198,7 @@
 					/>
 				</div>
 			</div>
-		{/await}
+		{/if}
 	</div>
 </div>
 

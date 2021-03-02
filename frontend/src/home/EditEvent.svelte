@@ -1,6 +1,7 @@
 <script>
 	import TextInput from "@/components/TextInput.svelte";
 	import ActionButton from "@/components/ActionButton.svelte";
+	import AlertDialog from "@/components/AlertDialog.svelte";
 	import Button from "@/components/Button.svelte";
 	import DatePicker from "@/components/DatePicker.svelte";
 	import TimePicker from "@/components/TimePicker.svelte";
@@ -8,16 +9,37 @@
 	import SpeakerField from "@/home/components/SpeakerField.svelte";
 
 	import Event from "@/services/event.js";
-
-	import { idIncrement, listTopics, storeEventTopics } from "@/components/stores.js";
-
 	import Speaker from "@/services/speaker.js";
-	import { onMount, onDestroy } from "svelte";
 	import pushState from "@/utils/pushState";
+    import getLastSegUrl from "@/utils/getLastSegUrl.js";
+    import EventAPI from "@/services/event.js";
+	
+	import { idIncrement, listTopics, storeEventTopics } from "@/components/stores.js";
+	import { onMount, onDestroy } from "svelte";
+
+	const eventId = getLastSegUrl();
 
 	let speakers = [];
+    let event = {};
+    let defaultHour
+    let defaultMinutes
+	let deleteDialog = false;
 
 	onMount(async () => {
+        const eventData = await EventAPI.getEvent({
+            id: eventId,
+        });
+
+        event = eventData;
+
+        date = eventData.datetime
+        time = eventData.datetime
+        
+        let timeInstance = new Date(eventData.datetime)
+
+        defaultHour = timeInstance.getUTCHours()
+        defaultMinutes = timeInstance.getUTCMinutes()
+
 		let data = await Speaker.getAllSpeakers();
 
 		for (let i = 0; i < data.length; i++) {
@@ -27,8 +49,15 @@
 			};
 			speakers.push(speaker);
 		}
-		$storeEventTopics = [{ id: 1, title: "", hook: "", why: "", what: "", speakers, speaker: 0 }];
-		$listTopics = [{ title: "", hook: "", why: "", what: "" }];
+        
+        for (let i = 0; i < event.topic.length; i++) {
+            event.topic[i].speakers = speakers
+			event.topic[i].speaker = event.topic[i].speaker.id
+			event.topic[i].id = i + 1
+        }
+
+		$storeEventTopics = event.topic
+		$listTopics = event.topic
 	});
 
 	onDestroy(() => {
@@ -60,17 +89,14 @@
 			$storeEventTopics[l] = { 
 				id: $idIncrement, title: "", hook: "", why: "", what: "", speakers, speaker: 0 
 			};
-			$listTopics[l] = { 
-				title: "", hook: "", why: "", what: ""
-			};
 			$idIncrement++; // increment our id to add additional items
 		}
 	}
 
-	async function publish() {
+	async function updateEvent() {
 		let episodeValue = episode.value;
-		let dateValue = date;
-		let timeValue = time;
+		let dateValue = new Date(date);
+		let timeValue = new Date(time);
 
 		if (episodeValue == "") {
 			episodeError.enabled = true;
@@ -93,7 +119,7 @@
 			timeError.enabled = false;
 		}
 		
-		let hours = timeValue.getHours();
+		let hours = timeValue.getUTCHours();
 		let minutes = timeValue.getMinutes();
 
 		let day = dateValue.getDate();
@@ -126,42 +152,59 @@
 
 		loading = true
 
-		console.log({
+		let ee = {
+			id: parseInt(eventId, 10),
 			episode: parseInt(episodeValue, 10),
 			datetime,
 			topic: topics,
-		})
+		}
 
-		let response = await Event.createEvent({
+		console.log(ee)
+
+		let response = await Event.updateEvent({
 			episode: parseInt(episodeValue, 10),
 			datetime,
 			topic: topics,
 		});
-
-		if (response.episode[0] == "event with this episode already exists.") {
-			episodeError.enabled = true;
-			episodeError.message = "Event with this episode already exists";
-			loading = false
-		} else {
-			pushState("/home")
-		}
 		
+		// if (response) {
+		// 	pushState(`/home/event/${eventId}`);
+		// }
+	}
+
+	function showDeleteDialog() {
+		deleteDialog = true;
+	}
+	async function deleteEvent() {
+		let response = await Event.deleteEvent({
+			id: eventId
+		})
+		pushState("/home")
 	}
 </script>
 
 <div class="wrapper">
 	<div class="content">
-		<Header title="Create Event" previousPath="/home" />
-		<div class="page-subheader">
-			<p class="subheader-text">Create a tech night event</p>
-		</div>
-		{#await speakers}
-			<!-- TODO: loader -->
+		<Header title="Edit Event" previousPath="/home/event/{eventId}" />
+        {#await event}
+        <!-- TODO: loader -->
 		{:then}
+		<div class="page-subheader">
+			<p class="subheader-text">Edit Tech Night #{event.episode}</p>
+			<ActionButton
+					label="Delete Event"
+					iconPath="/assets/icons/calendar-x-red.svg"
+					textColor="var(--red)"
+					on:click={showDeleteDialog}
+				/>
+		</div>
+		
+			
 			<div class="form">
 				<div>
 					<TextInput
 						bind:instance={episode}
+                        value={event.episode}
 						label="Tech Night Episode"
 						placeholder="Tech Night Episode"
 						error={episodeError}
@@ -170,8 +213,8 @@
 					/>
 				</div>
 				<div>
-					{#each $storeEventTopics as item}
-						<svelte:component this={SpeakerField} objAttributes={item} disabled={loading ? true : false}/>
+					{#each $storeEventTopics as item, i}
+						<svelte:component this={SpeakerField} objAttributes={item} disabled={loading ? true : false} />
 					{/each}
 					<div class="add-topic-div">
 						<ActionButton on:click={addSpeaker} disabled={loading ? true : false}/>
@@ -181,8 +224,8 @@
 					{/if}
 				</div>
 				<div class="side-by-side">
-					<DatePicker bind:date error={dateError} disabled={loading ? true : false}/>
-					<TimePicker bind:time error={timeError} disabled={loading ? true : false}/>
+					<DatePicker bind:date error={dateError} disabled={loading ? true : false} defaultDate={event.datetime}/>
+					<TimePicker bind:time error={timeError} disabled={loading ? true : false} {defaultHour} {defaultMinutes}/>
 				</div>
 				<!-- <div class="side-by-side" style="margin-bottom: 20px">
 					<TextInput
@@ -204,12 +247,27 @@
                 subText="Email will be sent to SET, A-Level, SFP, AUSMAT, DIIT. To edit, go to admin portal."
                 bind:checked={isSendDepartments}/> -->
 				<div class="publish-button-div">
-					<Button style="width: 50%" label="PUBLISH" on:click={publish} {loading}/>
+					<Button style="width: 50%" label="CONFIRM" on:click={updateEvent} {loading}/>
 				</div>
 			</div>
 		{/await}
 	</div>
 </div>
+
+{#if deleteDialog}
+	<AlertDialog bind:visible={deleteDialog}>
+		<p class="title">Are you sure?</p>
+		<p class="message">Are you sure want to delete Tehc Night #{event.episode}?</p>
+		<div class="button-div">
+			<Button
+				secondaryButton
+				label="Cancel"
+				on:click={() => (deleteDialog = false)}
+			/>
+			<Button on:click={deleteEvent} label="Yes" />
+		</div>
+	</AlertDialog>
+{/if}
 
 <style>
 	.wrapper {
@@ -255,6 +313,19 @@
 		display: flex;
 		justify-content: center;
 		margin: 40px 0;
+	}
+	.title {
+		font: var(--primary-font-bold);
+		font-size: 24px;
+		margin-bottom: 20px;
+	}
+	.message {
+		margin-bottom: 40px;
+	}
+	.button-div {
+		display: grid;
+		grid-template-columns: auto auto;
+		column-gap: 30px;
 	}
 	.error-message {
         font: var(--primary-font-regular);

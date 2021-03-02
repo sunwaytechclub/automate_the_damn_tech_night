@@ -2,47 +2,52 @@
     import TextInput from "@/components/TextInput.svelte"
     import Dropdown from "@/components/Dropdown.svelte"
 
-    import { storeFE, selectedSpeakers } from '@/components/stores.js';
+    import { storeEventTopics, listTopics } from '@/components/stores.js';
 
     export let objAttributes = {};
     export let disabled = false;
 
-    let selectedValue;
-    let tempValue = "";
+    let selectedValue
+
+    let topicIndex = objAttributes.id - 1
 
     function handleSelect(event) {
         let value = event.detail.value
-        
-        if (!$selectedSpeakers.includes(value)) {
-            if (value != tempValue && tempValue !== "" && tempValue !== null) {
-                $selectedSpeakers.pop()
-            }
-            let l = $selectedSpeakers.length;
-            $selectedSpeakers[l] = value
-            tempValue = value;
-
-            $storeFE[l].selectedSpeaker = value
-
-            return
-        }
-        objAttributes.selectedSpeaker = event.detail.value
-
-        selectedValue = null
+        $listTopics[topicIndex].selectedSpeaker = value
+        $listTopics[topicIndex].title = objAttributes.titleInstance.value
+        $listTopics[topicIndex].hook = objAttributes.hookInstance.value
+        $listTopics[topicIndex].why = objAttributes.whyInstance.value
+        $listTopics[topicIndex].what = objAttributes.whatInstance.value
     }
+
+    function updateValue() {
+        $listTopics[topicIndex].title = objAttributes.titleInstance.value
+        $listTopics[topicIndex].hook = objAttributes.hookInstance.value
+        $listTopics[topicIndex].why = objAttributes.whyInstance.value
+        $listTopics[topicIndex].what = objAttributes.whatInstance.value
+    }
+
+    for (let i = 0; i < $storeEventTopics[topicIndex].speakers.length; i++) {
+        if ($storeEventTopics[topicIndex].speaker == $storeEventTopics[topicIndex].speakers[i].value) {
+            selectedValue =  $storeEventTopics[topicIndex].speakers[i]
+            $listTopics[topicIndex].selectedSpeaker = $storeEventTopics[topicIndex].speakers[i].value
+        }
+    }
+        
 </script>
 
 <div class="speaker-header-div">
     <p class="speaker-header">Topic #{objAttributes.id}</p>
 </div>
 <div class="side-by-side">
-    <TextInput label="Topic Title" placeholder="Topic Title" bind:instance={objAttributes.topic} {disabled}/>
+    <TextInput value={$listTopics[topicIndex].title} label="Topic Title" placeholder="Topic Title" bind:instance={objAttributes.titleInstance} {disabled} on:keyup={updateValue}/>
     <Dropdown label="Speaker" placeholder="Speaker" 
         items={objAttributes.speakers} bind:selectedValue on:select={handleSelect} {disabled}/>
 </div>
 <div>
-    <TextInput label="Hook" placeholder="Hook" bind:instance={objAttributes.hook} {disabled}/>
-    <TextInput label="Why" placeholder="Why?" bind:instance={objAttributes.why} {disabled}/>
-    <TextInput label="What" placeholder="What?!" bind:instance={objAttributes.what} {disabled}/>
+    <TextInput value={$listTopics[topicIndex].hook} label="Hook" placeholder="Hook" bind:instance={objAttributes.hookInstance} {disabled} on:keyup={updateValue}/>
+    <TextInput value={$listTopics[topicIndex].why} label="Why" placeholder="Why?" bind:instance={objAttributes.whyInstance} {disabled} on:keyup={updateValue}/>
+    <TextInput value={$listTopics[topicIndex].what} label="What" placeholder="What?!" bind:instance={objAttributes.whatInstance} {disabled} on:keyup={updateValue}/>
 </div>
 
 <style>

@@ -19,7 +19,7 @@
             <img src={speaker.avatar} alt="" class="avatar"/>
             <div>
                 <p class="speaker-name">{speaker.name}</p>
-                <p class="speaker-position">{speaker.position}</p>
+                <p class="speaker-position">{speaker.position.split("\n")[0]}</p>
             </div>
             <img src="/assets/icons/edit.svg" alt="" class="edit-icon"/>
         </div>

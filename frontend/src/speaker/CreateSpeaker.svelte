@@ -1,29 +1,30 @@
 <script>
-	import SideNavbar from "@/components/SideNavbar.svelte";
 	import Header from "@/components/Header.svelte";
 	import ActionButton from "@/components/ActionButton.svelte";
 	import Dragndrop from "@/components/Dragndrop.svelte";
-	import AlertDialog from "@/components/AlertDialog.svelte";
 	import PositionField from "@/speaker/components/PositionField.svelte";
 	import TextInput from "@/components/TextInput.svelte";
 	import Button from "@/components/Button.svelte";
 
-	import { storeFE, idIncrement } from "@/components/stores.js";
+	import { storeSpeaker, idIncrement, storeSpeakerPositions, listPositions } from "@/components/stores.js";
 	import Speaker from "@/services/speaker.js";
 	import pushState from "@/utils/pushState";
+	import { onDestroy } from 'svelte'
+
+	onDestroy(() => {
+		$listPositions = [];
+		$storeSpeakerPositions = []
+		$idIncrement = 0
+	});
 
 	let name;
-	let position;
 	let avatar;
-
-	let speakers = [
-		{ value: "rain", label: "Rain Chai" },
-		{ value: "nick", label: "Nick" },
-		{ value: "yong", label: "Yong" },
-		{ value: "lynus", label: "Lynus" },
-		{ value: "eason", label: "Eason" },
-	];
-
+	let positions = ""
+	let maxPositionError = {
+		enabled: false,
+		message: "You can only add up to 3 positions"
+	}
+	
 	let nameError = {};
 	let positionError = {};
 	let avatarError = {
@@ -32,28 +33,27 @@
 	};
 	let loading;
 
-	$storeFE = [
-		{ id: 1, topic: "First option", caption: "additional note", speakers },
+	$storeSpeakerPositions = [
+		{ id: 1, position: ""},
 		// other items can go here
 	];
 
-	idIncrement.set(2); // this is a crude way to increment the id for new items
+	$idIncrement = 2
 
 	function addPosition() {
-		var l = $storeFE.length; // get our current items list count
-		$storeFE[l] = {
+		var l = $storeSpeakerPositions.length; // get our current items list count
+		if (l >= 3) {
+			return maxPositionError.enabled = true
+		} 
+		$storeSpeakerPositions[l] = {
 			id: $idIncrement,
-			topic: "Another option",
-			caption: "additional note",
-			speakers,
+			position: ""
 		};
-		console.log($storeFE);
 		$idIncrement++; // increment our id to add additional items
 	}
 
 	async function createSpeaker() {
 		let nameValue = name.value;
-		let positionValue = position.value;
 
 		if (nameValue == "") {
 			nameError.enabled = true;
@@ -61,14 +61,6 @@
 			return;
 		} else {
 			nameError.enabled = false;
-		}
-
-		if (positionValue == "") {
-			positionError.enabled = true;
-			positionError.message = "Please fill in speaker position";
-			return;
-		} else {
-			positionError.enabled = false;
 		}
 
 		if (avatar == null) {
@@ -79,11 +71,23 @@
 			avatarError.enabled = false;
 		}
 
+		for (let i = 0; i < $storeSpeakerPositions.length; i++) {
+
+			if ($storeSpeakerPositions[i].position.value == "") {
+					positionError.message = "Please fill in position(s)"
+					return positionError.enabled = true
+			}
+
+			let position = $storeSpeakerPositions[i].position.value
+			
+			positions += `${position}\n`;
+		}
+
 		loading = true;
 
 		let response = await Speaker.createSpeaker({
 			name: nameValue,
-			position: positionValue,
+			position: positions,
 			avatar,
 		});
 		if (response) {
@@ -124,19 +128,25 @@
 				/>
 			</div>
 			<div>
-				<TextInput
+				<!-- <TextInput
 					bind:instance={position}
 					label="Position"
 					placeholder="Position"
 					error={positionError}
 					disabled={loading ? true : false}
-				/>
-				<!-- {#each $storeFE as item}
-                <svelte:component this={PositionField} objAttributes={item}/>
-                {/each} -->
-				<!-- <div class="add-topic-div">
+				/> -->
+				{#each $storeSpeakerPositions as item}
+                	<svelte:component this={PositionField} objAttributes={item} disabled={loading ? true : false}/>
+                {/each}
+				<div class="add-topic-div">
                     <ActionButton label="Add Position" on:click={addPosition}/>
-                </div> -->
+                </div>
+				{#if maxPositionError.enabled}
+					<p class="error-message">{maxPositionError.message}</p>
+				{/if}
+				{#if positionError.enabled}
+					<p class="error-message">{positionError.message}</p>
+				{/if}
 			</div>
 			<div class="confirm-button-div">
 				<Button

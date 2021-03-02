@@ -13,7 +13,6 @@
 	onMount(async () => {
 		let response = await Speaker.getAllSpeakers();
 		speakers = response;
-		console.log(speakers);
 	});
 
 	// $: allSpeakers = speakers

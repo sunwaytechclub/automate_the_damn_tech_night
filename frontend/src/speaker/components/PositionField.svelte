@@ -1,30 +1,15 @@
 <script>
     import TextInput from "@/components/TextInput.svelte"
-    import Dropdown from "@/components/Dropdown.svelte"
 
-    import { storeFE, selectedSpeakers } from '@/components/stores.js';
+    import { listPositions } from '@/components/stores.js';
 
     export let objAttributes = {};
-    let selectedValue;
-    let tempValue = ""
+    export let disabled = false;
 
-    function handleSelect(event) {
-        let value = event.detail.value
-        
-        if (!$selectedSpeakers.includes(value)) {
-            if (value != tempValue && tempValue !== "" && tempValue !== null) {
-                $selectedSpeakers.pop()
-            }
-            let l = $selectedSpeakers.length;
-            $selectedSpeakers[l] = value
-            tempValue = value;
+    let positionIndex = objAttributes.id - 1
 
-            $storeFE[l].selectedSpeaker = value
-
-            return
-        }
-
-        selectedValue = null
+    function updateValue() {
+        $listPositions[positionIndex] = objAttributes.position.value
     }
 </script>
 
@@ -32,7 +17,7 @@
     <p class="speaker-header">Position #{objAttributes.id}</p>
 </div>
 <div>
-    <TextInput label="Position" placeholder="Position" bind:value={objAttributes.caption}/>
+    <TextInput value={$listPositions[positionIndex]} label="Position" placeholder="Position" bind:instance={objAttributes.position} {disabled} on:keyup={updateValue}/>
 </div>
 
 <style>
