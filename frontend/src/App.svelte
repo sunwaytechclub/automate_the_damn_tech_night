@@ -1,5 +1,7 @@
 <script>
 	import { onDestroy } from "svelte";
+	import { fade } from "svelte/transition";
+	import { quintOut } from "svelte/easing";
 	import { Route, params } from "@/components/stores.js";
 	import Navbar from "@/components/Navbar.svelte";
 	import router from "@/rootRoutes";
@@ -12,6 +14,7 @@
 	let windowWidth = 0;
 	let navbarCollapseInWidth = 850;
 	let toggle = false;
+	let onPage = true;
 
 	$: {
 		if (windowWidth < navbarCollapseInWidth && !$disableNavbar) {
@@ -29,8 +32,12 @@
 
 	function track(obj) {
 		toggle = false;
+		onPage = false;
 		uri = obj.state || obj.uri || location.pathname;
 		if (window.ga) ga.send("pageview", { dp: uri });
+		setTimeout(() => {
+			onPage = true;
+		}, 130);
 	}
 
 	addEventListener("replacestate", track);
@@ -51,9 +58,15 @@
 			<SideNavbar />
 		{/if}
 	{/if}
-	<div class="content" bind:this={content}>
-		<svelte:component this={$Route} {$params} />
-	</div>
+	{#if onPage}
+		<div
+			class="content"
+			bind:this={content}
+			transition:fade={{ duration: 100, easing: quintOut }}
+		>
+			<svelte:component this={$Route} {$params} />
+		</div>
+	{/if}
 </main>
 
 <style>
