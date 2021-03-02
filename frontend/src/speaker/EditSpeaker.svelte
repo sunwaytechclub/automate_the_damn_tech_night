@@ -68,7 +68,7 @@
 
 	function addPosition() {
 		console.log($storeSpeakerPositions)
-		var l = $storeSpeakerPositions.length; // get our current items list count
+		var l = $storeSpeakerPositions.length;
 		if (l > 3) {
 			return maxPositionError.enabled = true
 		} 
@@ -78,7 +78,7 @@
 			deleteButton: true
 		};
 		$storeSpeakerPositions[l-1].deleteButton = false
-		$idIncrement++; // increment our id to add additional items
+		$idIncrement++;
 	}
 
 	async function editSpeaker() {
@@ -131,7 +131,7 @@
 				id: speakerId,
 			});
 			
-			pushState("/speakers");
+			window.location.href = "/speakers";
 		} catch {
 			$alert.message = "Server error..."
 			$alert.enabled = true

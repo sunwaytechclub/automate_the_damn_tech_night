@@ -2,10 +2,13 @@
     import TextInput from "@/components/TextInput.svelte"
     import Dropdown from "@/components/Dropdown.svelte"
 
+    import { createEventDispatcher } from 'svelte';
     import { storeEventTopics, listTopics } from '@/components/stores.js';
 
     export let objAttributes = {};
     export let disabled = false;
+
+    const dispatch = createEventDispatcher();
 
     let selectedValue
 
@@ -33,11 +36,22 @@
             $listTopics[topicIndex].selectedSpeaker = $storeEventTopics[topicIndex].speakers[i].value
         }
     }
+
+    function deleteTopic() {
+		dispatch('delete', {
+			topicIndex
+		});
+	}
         
 </script>
 
 <div class="speaker-header-div">
     <p class="speaker-header">Topic #{objAttributes.id}</p>
+    {#if $storeEventTopics[topicIndex].deleteButton}
+        <img src="/assets/icons/close-big.svg" alt="close" class="delete-topic-icon" on:click={deleteTopic}/>
+    {:else}
+    <div></div>
+        {/if}
 </div>
 <div class="side-by-side">
     <TextInput value={$listTopics[topicIndex].title} label="Topic Title" placeholder="Topic Title" bind:instance={objAttributes.titleInstance} {disabled} on:keyup={updateValue}/>
@@ -59,18 +73,21 @@
     .speaker-header {
         font: var(--primary-font-bold);
     }
+    .delete-topic-icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+    }
     .speaker-header:after {
         position: absolute;
         top: 51%;
         left: 100px;
         overflow: hidden;
-        width: 87%;
+        width: 80%;
         height: 2px;
         content: '\a0';
         background-color: var(--light-grey)
-    }
-    .disabled {
-        color: var(--medium-grey)
     }
     .side-by-side {
         display: grid;
@@ -79,7 +96,7 @@
     }
     @media only screen and (max-width: 966px) {
 		.speaker-header:after {
-            width: 70%;
+            width: 60%;
         }
         .side-by-side {
             display: block

@@ -56,14 +56,15 @@
 
 	function addSpeaker() {
 		if (!loading) {
-			var l = $storeEventTopics.length; // get our current items list count
+			var l = $storeEventTopics.length;
 			$storeEventTopics[l] = { 
-				id: $idIncrement, title: "", hook: "", why: "", what: "", speakers, speaker: 0 
+				id: $idIncrement, title: "", hook: "", why: "", what: "", speakers, speaker: 0, deleteButton: true 
 			};
 			$listTopics[l] = { 
 				title: "", hook: "", why: "", what: ""
 			};
-			$idIncrement++; // increment our id to add additional items
+			$storeEventTopics[l-1].deleteButton = false
+			$idIncrement++;
 		}
 	}
 
@@ -140,6 +141,19 @@
 			loading = false;
 		}
 	}
+
+	async function deleteTopic() {
+		let tempPositions = $storeEventTopics
+		tempPositions.pop()
+		$listTopics.pop()
+		$idIncrement--
+
+		$storeEventTopics = tempPositions
+
+		if ($storeEventTopics.length == 2) {
+			$storeEventTopics[1].deleteButton = true
+		}
+	}
 </script>
 
 <div class="wrapper">
@@ -165,7 +179,7 @@
 					</div>
 					<div>
 						{#each $storeEventTopics as item}
-							<svelte:component this={SpeakerField} objAttributes={item} disabled={loading ? true : false}/>
+							<svelte:component this={SpeakerField} objAttributes={item} disabled={loading ? true : false} on:delete={deleteTopic}/>
 						{/each}
 						<div class="add-topic-div">
 							<ActionButton on:click={addSpeaker} disabled={loading ? true : false}/>

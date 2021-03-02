@@ -54,10 +54,15 @@
             event.topic[i].speakers = speakers
 			event.topic[i].speaker = event.topic[i].speaker.id
 			event.topic[i].id = i + 1
+			event.topic[i].deleteButton = false
         }
 
 		$storeEventTopics = event.topic
 		$listTopics = event.topic
+		$idIncrement = $storeEventTopics.length + 1
+		if ($storeEventTopics.length > 1) {
+			$storeEventTopics[$storeEventTopics.length - 1].deleteButton = true
+		}
 	});
 
 	onDestroy(() => {
@@ -87,7 +92,7 @@
 		if (!loading) {
 			var l = $storeEventTopics.length;
 			$storeEventTopics[l] = { 
-				id: $idIncrement, title: "", hook: "", why: "", what: "", speakers, speaker: 0 
+				id: $idIncrement, title: "", hook: "", why: "", what: "", speakers, speaker: 0 , deleteButton: true 
 			};
 			$idIncrement++;
 		}
@@ -172,7 +177,7 @@
 			await Event.deleteEvent({
 				id: eventId
 			})
-			pushState("/home")
+			window.location.href = "/home"
 		} catch {
 			$alert.message = "Server error..."
 			$alert.enabled = true
@@ -182,6 +187,18 @@
 
 	function showDeleteDialog() {
 		deleteDialog = true;
+	}
+
+	async function deleteTopic() {
+		let tempTopics = $storeEventTopics
+		tempTopics.pop()
+		$idIncrement--
+
+		$storeEventTopics = tempTopics
+
+		if ($storeEventTopics.length == 2) {
+			$storeEventTopics[1].deleteButton = true
+		}
 	}
 </script>
 
@@ -215,7 +232,7 @@
 					</div>
 					<div>
 						{#each $storeEventTopics as item, i}
-							<svelte:component this={SpeakerField} objAttributes={item} disabled={loading ? true : false} />
+							<svelte:component this={SpeakerField} objAttributes={item} disabled={loading ? true : false} on:delete={deleteTopic}/>
 						{/each}
 						<div class="add-topic-div">
 							<ActionButton on:click={addSpeaker} disabled={loading ? true : false}/>

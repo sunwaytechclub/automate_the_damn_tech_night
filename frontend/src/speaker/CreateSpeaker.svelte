@@ -47,8 +47,10 @@
 		} 
 		$storeSpeakerPositions[l] = {
 			id: $idIncrement,
-			position: ""
+			position: "",
+			deleteButton: true
 		};
+		$storeSpeakerPositions[l-1].deleteButton = false
 		$idIncrement++;
 	}
 
@@ -99,6 +101,19 @@
 			loading = false;
 		}
 	}
+
+	async function deletePosition() {
+		let tempPositions = $storeSpeakerPositions
+		tempPositions.pop()
+		$listPositions.pop()
+		$idIncrement--
+
+		$storeSpeakerPositions = tempPositions
+
+		if ($storeSpeakerPositions.length == 2) {
+			$storeSpeakerPositions[1].deleteButton = true
+		}
+	}
 </script>
 
 <div class="wrapper">
@@ -142,7 +157,7 @@
 						disabled={loading ? true : false}
 					/> -->
 					{#each $storeSpeakerPositions as item}
-						<svelte:component this={PositionField} objAttributes={item} disabled={loading ? true : false}/>
+						<svelte:component this={PositionField} objAttributes={item} disabled={loading ? true : false} on:delete={deletePosition}/>
 					{/each}
 					<div class="add-topic-div">
 						<ActionButton label="Add Position" on:click={addPosition}/>
