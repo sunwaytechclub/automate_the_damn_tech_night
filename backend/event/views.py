@@ -52,7 +52,7 @@ class EventView(ModelViewSet):
                 t = Topic.objects.create(
                     speaker=speaker,
                     event=event,
-                    hook=topic['hook']
+                    hook=topic["hook"],
                     title=topic["title"],
                     why=topic["why"],
                     what=topic["what"],
