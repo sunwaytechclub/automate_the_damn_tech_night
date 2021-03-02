@@ -39,4 +39,9 @@
         content: '\a0';
         background-color: var(--light-grey)
     }
+    @media only screen and (max-width: 966px) {
+		.speaker-header:after {
+            width: 66%;
+        }
+	}
 </style>

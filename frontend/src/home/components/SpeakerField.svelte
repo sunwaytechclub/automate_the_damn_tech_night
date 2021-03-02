@@ -77,7 +77,7 @@
         grid-template-columns: auto auto;
         column-gap: 30px
     }
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 966px) {
 		.speaker-header:after {
             width: 70%;
         }
