@@ -67,29 +67,33 @@
 					on:click={navigateEditEvent}
 				/>
 			</div>
-			<div class="generated-content line">
-				<div class="field-title">
-					<p class="field-title-text">Generated Content</p>
-					<ActionButton
-						label={copyText}
-						iconPath="/assets/icons/copy.svg"
-						textColor="var(--dark-blue)"
-						on:click={copyWriteup}
-					/>
+			<div class="generated-content-wrapper">
+				<div class="generated-content">
+					<div class="generated-writeup line">
+						<div class="field-title">
+							<p class="field-title-text">Generated Writeup</p>
+							<ActionButton
+								label={copyText}
+								iconPath="/assets/icons/copy.svg"
+								textColor="var(--dark-blue)"
+								on:click={copyWriteup}
+							/>
+						</div>
+						<div class="content-writeup" bind:this={writeupContainer} />
+					</div>
+					<div class="generated-poster line">
+						<div class="field-title">
+							<p class="field-title-text">Generated Poster</p>
+							<ActionButton
+								label="Download"
+								iconPath="/assets/icons/download.svg"
+								textColor="var(--dark-blue)"
+								on:click={downloadPoster}
+							/>
+						</div>
+						<img src={event.poster} alt="" class="poster" />
+					</div>
 				</div>
-				<div class="content-writeup" bind:this={writeupContainer} />
-			</div>
-			<div class="generated-poster line">
-				<div class="field-title">
-					<p class="field-title-text">Generated Poster</p>
-					<ActionButton
-						label="Download"
-						iconPath="/assets/icons/download.svg"
-						textColor="var(--dark-blue)"
-						on:click={downloadPoster}
-					/>
-				</div>
-				<img src={event.poster} alt="" class="poster" />
 			</div>
 		{/await}
 	</div>
@@ -120,7 +124,14 @@
 		font-size: 10px;
 		color: var(--dark-blue);
 	}
+	.generated-content-wrapper {
+		display: flex;
+		justify-content: center;
+	}
 	.generated-content {
+		width: 50vw
+	}
+	.generated-writeup {
 		width: 95%;
 	}
 	.generated-poster {
@@ -150,7 +161,8 @@
 	}
 	@media only screen and (max-width: 966px) {
 		.generated-content {
-			margin-left: 5px;
+			width: 80vw;
+			margin-left: 10px;
 		}
 	}
 </style>
