@@ -10,6 +10,7 @@
         enabled: false,
         message: "Invalid"
     }
+    export let disabled = false;
     
     const flatpickrOptions = {
         element: '#my-time-picker',
@@ -26,7 +27,7 @@
 
     <Flatpickr options="{ flatpickrOptions }" bind:value={time} element="#my-time-picker">
         <div class="flatpickr" id="my-time-picker">
-            <input type="text" placeholder="Select Time.." data-input class="{error.enabled ? "error" : ""}">
+            <input type="text" placeholder="Select Time.." data-input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}" {disabled}>
             {#if error.enabled}
                 <p class="error-message">{error.message}</p>
             {/if}
@@ -44,6 +45,9 @@
         margin-bottom: 10px;
         display: block;
         color: var(--dark-blue);
+    }
+    .disabled {
+        color: var(--medium-grey)
     }
     .error {
         border: 2px var(--red) solid;

@@ -12,13 +12,14 @@
     export let selectedValue = ""
     export let placeholder = "Speaker name"
     export let label;
+    export let disabled = false;
 
 </script>
 
-<div class="themed">
+<div class="themed {disabled ? "disabled" : ""}">
     <!-- svelte-ignore a11y-label-has-associated-control -->
     <label>{label}</label>
-    <Select {items} {selectedValue} {placeholder} on:select></Select>
+    <Select {items} {selectedValue} {placeholder} on:select isDisabled={disabled}></Select>
 </div>
 
 <style>
@@ -27,6 +28,9 @@
         margin-bottom: 10px;
         display: block;
         color: var(--dark-blue);
+    }
+    .disabled {
+        color: var(--medium-grey)
     }
     
     .themed {

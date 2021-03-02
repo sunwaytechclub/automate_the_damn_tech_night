@@ -5,6 +5,7 @@
     import { storeFE, selectedSpeakers } from '@/components/stores.js';
 
     export let objAttributes = {};
+    export let disabled = false;
 
     let selectedValue;
     let tempValue = "";
@@ -34,14 +35,14 @@
     <p class="speaker-header">Topic #{objAttributes.id}</p>
 </div>
 <div class="side-by-side">
-    <TextInput label="Topic Title" placeholder="Topic Title" bind:instance={objAttributes.topic}/>
+    <TextInput label="Topic Title" placeholder="Topic Title" bind:instance={objAttributes.topic} {disabled}/>
     <Dropdown label="Speaker" placeholder="Speaker" 
-        items={objAttributes.speakers} bind:selectedValue on:select={handleSelect}/>
+        items={objAttributes.speakers} bind:selectedValue on:select={handleSelect} {disabled}/>
 </div>
 <div>
-    <TextInput label="Hook" placeholder="Hook" bind:instance={objAttributes.hook}/>
-    <TextInput label="Why" placeholder="Why?" bind:instance={objAttributes.why}/>
-    <TextInput label="What" placeholder="What?!" bind:instance={objAttributes.what}/>
+    <TextInput label="Hook" placeholder="Hook" bind:instance={objAttributes.hook} {disabled}/>
+    <TextInput label="Why" placeholder="Why?" bind:instance={objAttributes.why} {disabled}/>
+    <TextInput label="What" placeholder="What?!" bind:instance={objAttributes.what} {disabled}/>
 </div>
 
 <style>
@@ -62,6 +63,9 @@
         height: 2px;
         content: '\a0';
         background-color: var(--light-grey)
+    }
+    .disabled {
+        color: var(--medium-grey)
     }
     .side-by-side {
         display: grid;

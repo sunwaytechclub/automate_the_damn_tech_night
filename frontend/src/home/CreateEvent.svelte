@@ -50,10 +50,12 @@
 	let loading = false;
 
 	function addSpeaker() {
-		var l = $storeFE.length; // get our current items list count
-		$storeFE[l] = { id: $idIncrement, topic: "", caption: "", speakers };
-		console.log($storeFE);
-		$idIncrement++; // increment our id to add additional items
+		if (!loading) {
+			var l = $storeFE.length; // get our current items list count
+			$storeFE[l] = { id: $idIncrement, topic: "", caption: "", speakers };
+			console.log($storeFE);
+			$idIncrement++; // increment our id to add additional items
+		}
 	}
 
 	async function publish() {
@@ -118,6 +120,7 @@
 			datetime,
 			topic: topics,
 		});
+		
 		pushState("/home");
 	}
 </script>
@@ -139,22 +142,23 @@
 						placeholder="Tech Night Episode"
 						error={episodeError}
 						type="number"
+						disabled={loading ? true : false}
 					/>
 				</div>
 				<div>
 					{#each $storeFE as item}
-						<svelte:component this={SpeakerField} objAttributes={item} />
+						<svelte:component this={SpeakerField} objAttributes={item} disabled={loading ? true : false}/>
 					{/each}
 					<div class="add-topic-div">
-						<ActionButton on:click={addSpeaker} />
+						<ActionButton on:click={addSpeaker} disabled={loading ? true : false}/>
 					</div>
 					{#if topicError.enabled}
 						<p class="error-message">{topicError.message}</p>
 					{/if}
 				</div>
 				<div class="side-by-side">
-					<DatePicker bind:date error={dateError} />
-					<TimePicker bind:time error={timeError} />
+					<DatePicker bind:date error={dateError} disabled={loading ? true : false}/>
+					<TimePicker bind:time error={timeError} disabled={loading ? true : false}/>
 				</div>
 				<!-- <div class="side-by-side" style="margin-bottom: 20px">
 					<TextInput

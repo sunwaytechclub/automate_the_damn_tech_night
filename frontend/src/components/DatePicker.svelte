@@ -10,6 +10,7 @@
         enabled: false,
         message: "Invalid"
     }
+    export let disabled = false;
     
     const flatpickrOptions = {
         element: '#my-date-picker'
@@ -22,7 +23,7 @@
 
     <Flatpickr options="{ flatpickrOptions }" bind:value={date} element="#my-date-picker">
         <div class="flatpickr" id="my-date-picker">
-            <input type="text" placeholder="Select Date.." data-input class="{error.enabled ? "error" : ""}">
+            <input type="text" placeholder="Select Date.." data-input class="{disabled ? "disabled" : ""} {error.enabled ? "error" : ""}" {disabled}>
             {#if error.enabled}
                 <p class="error-message">{error.message}</p>
             {/if}
@@ -50,6 +51,9 @@
         background-color: var(--light-grey);
         border: none;
         padding: 0 20px;
+    }
+    .disabled {
+        color: var(--medium-grey)
     }
     .error {
         border: 2px var(--red) solid;
