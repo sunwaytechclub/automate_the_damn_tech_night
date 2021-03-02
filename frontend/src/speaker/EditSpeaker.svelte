@@ -11,7 +11,7 @@
 	import getLastSegUrl from "@/utils/getLastSegUrl.js";
 	import SpeakerAPI from "@/services/speaker.js";
 
-	import { storeSpeaker, idIncrement, storeSpeakerPositions, listPositions} from "@/components/stores.js";
+	import { storeSpeaker, idIncrement, storeSpeakerPositions, listPositions, alert} from "@/components/stores.js";
 	import { onMount, onDestroy } from "svelte";
 
 	let speakerId = getLastSegUrl();
@@ -30,13 +30,17 @@
 		for (let i = 0; i < tempPositions.length; i++) {
 			let positionObj = {
 				id: i + 1,
-				position: tempPositions[i]
+				position: tempPositions[i],
+				deleteButton: false
 			}
 			$listPositions.push(tempPositions[i])
 			$storeSpeakerPositions.push(positionObj)
 		}
 		positions = $storeSpeakerPositions
 		$idIncrement = $storeSpeakerPositions.length + 1
+		if ($storeSpeakerPositions.length > 1) {
+			$storeSpeakerPositions[$storeSpeakerPositions.length - 1].deleteButton = true
+		}
 	});
 
 	onDestroy(() => {
@@ -59,18 +63,21 @@
 	};
 	let maxPositionError = {
 		enabled: false,
-		message: "You can only add up to 3 positions"
+		message: "You can only add up to 4 positions"
 	}
 
 	function addPosition() {
+		console.log($storeSpeakerPositions)
 		var l = $storeSpeakerPositions.length; // get our current items list count
-		if (l >= 3) {
+		if (l > 3) {
 			return maxPositionError.enabled = true
 		} 
 		$storeSpeakerPositions[l] = {
 			id: $idIncrement,
-			position: ""
+			position: "",
+			deleteButton: true
 		};
+		$storeSpeakerPositions[l-1].deleteButton = false
 		$idIncrement++; // increment our id to add additional items
 	}
 
@@ -100,25 +107,53 @@
 
 		loading = true;
 
-		let response = await SpeakerAPI.updateSpeaker({
-			id: speakerId,
-			name: name.value,
-			position: positionValue,
-			avatar: avatar || null,
-		});
+		try {
+			SpeakerAPI.updateSpeaker({
+				id: speakerId,
+				name: name.value,
+				position: positionValue,
+				avatar: avatar || null,
+			});
+			
+			location.reload();
+		} catch {
+			$alert.message = "Server error..."
+			$alert.enabled = true
+			loading = false;
+		}
 
-		location.reload();
+	}
+
+	
+	async function deleteSpeaker() {
+		try {
+			await SpeakerAPI.deleteSpeaker({
+				id: speakerId,
+			});
+			
+			pushState("/speakers");
+		} catch {
+			$alert.message = "Server error..."
+			$alert.enabled = true
+			loading = false;
+		}
 	}
 
 	function showDeleteDialog() {
 		deleteDialog = true;
 	}
 
-	async function deleteSpeaker() {
-		let response = await SpeakerAPI.deleteSpeaker({
-			id: speakerId,
-		});
-		pushState("/speakers");
+	async function deletePosition() {
+		let tempPositions = $storeSpeakerPositions
+		tempPositions.pop()
+		$listPositions.pop()
+		$idIncrement--
+
+		$storeSpeakerPositions = tempPositions
+
+		if ($storeSpeakerPositions.length == 2) {
+			$storeSpeakerPositions[1].deleteButton = true
+		}
 	}
 </script>
 
@@ -177,7 +212,7 @@
 				</div>
 				<div>
 					{#each $storeSpeakerPositions as item, i}
-                		<svelte:component this={PositionField} objAttributes={item} disabled={loading ? true : false}/>
+                		<svelte:component this={PositionField} objAttributes={item} disabled={loading ? true : false} on:delete={deletePosition}/>
 					{/each}
 					<div class="add-topic-div">
 						<ActionButton label="Add Position" on:click={addPosition}/>
@@ -298,7 +333,7 @@
 		margin-top: 5px;
 		position: absolute;
 	}
-	@media only screen and (max-width: 600px) {
+	@media only screen and (max-width: 966px) {
 		.content {
 			align-items: center;
 		}

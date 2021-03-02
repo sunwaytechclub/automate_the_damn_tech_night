@@ -12,3 +12,5 @@ export let storeSpeakerPositions = writable([])
 export let listPositions = writable([])
 export let storeEventTopics = writable([])
 export let listTopics = writable([])
+
+export let alert = writable({})

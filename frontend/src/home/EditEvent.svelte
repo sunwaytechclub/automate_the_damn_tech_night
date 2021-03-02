@@ -14,7 +14,7 @@
     import getLastSegUrl from "@/utils/getLastSegUrl.js";
     import EventAPI from "@/services/event.js";
 	
-	import { idIncrement, listTopics, storeEventTopics } from "@/components/stores.js";
+	import { idIncrement, listTopics, storeEventTopics, alert } from "@/components/stores.js";
 	import { onMount, onDestroy } from "svelte";
 
 	const eventId = getLastSegUrl();
@@ -85,11 +85,11 @@
 
 	function addSpeaker() {
 		if (!loading) {
-			var l = $storeEventTopics.length; // get our current items list count
+			var l = $storeEventTopics.length;
 			$storeEventTopics[l] = { 
 				id: $idIncrement, title: "", hook: "", why: "", what: "", speakers, speaker: 0 
 			};
-			$idIncrement++; // increment our id to add additional items
+			$idIncrement++;
 		}
 	}
 
@@ -152,34 +152,36 @@
 
 		loading = true
 
-		let ee = {
-			id: parseInt(eventId, 10),
-			episode: parseInt(episodeValue, 10),
-			datetime,
-			topic: topics,
+		try {
+			await Event.updateEvent({
+				id: eventId,
+				episode: episodeValue == event.episode ? null : parseInt(episodeValue),
+				datetime,
+				topic: topics,
+			});
+			pushState(`/home/event/${eventId}`);
+		} catch {
+			$alert.message = "Server error..."
+			$alert.enabled = true
+			loading = false;
 		}
+	}
 
-		console.log(ee)
-
-		let response = await Event.updateEvent({
-			episode: parseInt(episodeValue, 10),
-			datetime,
-			topic: topics,
-		});
-		
-		// if (response) {
-		// 	pushState(`/home/event/${eventId}`);
-		// }
+	async function deleteEvent() {
+		try {
+			await Event.deleteEvent({
+				id: eventId
+			})
+			pushState("/home")
+		} catch {
+			$alert.message = "Server error..."
+			$alert.enabled = true
+			loading = false;
+		}
 	}
 
 	function showDeleteDialog() {
 		deleteDialog = true;
-	}
-	async function deleteEvent() {
-		let response = await Event.deleteEvent({
-			id: eventId
-		})
-		pushState("/home")
 	}
 </script>
 

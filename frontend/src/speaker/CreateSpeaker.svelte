@@ -6,9 +6,10 @@
 	import TextInput from "@/components/TextInput.svelte";
 	import Button from "@/components/Button.svelte";
 
-	import { storeSpeaker, idIncrement, storeSpeakerPositions, listPositions } from "@/components/stores.js";
 	import Speaker from "@/services/speaker.js";
 	import pushState from "@/utils/pushState";
+
+	import { idIncrement, storeSpeakerPositions, listPositions, alert } from "@/components/stores.js";
 	import { onDestroy } from 'svelte'
 
 	onDestroy(() => {
@@ -25,23 +26,22 @@
 		message: "You can only add up to 3 positions"
 	}
 	
+	let loading;
 	let nameError = {};
 	let positionError = {};
 	let avatarError = {
 		enabled: false,
 		message: "Invalid",
 	};
-	let loading;
 
 	$storeSpeakerPositions = [
 		{ id: 1, position: ""},
-		// other items can go here
 	];
 
 	$idIncrement = 2
 
 	function addPosition() {
-		var l = $storeSpeakerPositions.length; // get our current items list count
+		var l = $storeSpeakerPositions.length; 
 		if (l >= 3) {
 			return maxPositionError.enabled = true
 		} 
@@ -49,7 +49,7 @@
 			id: $idIncrement,
 			position: ""
 		};
-		$idIncrement++; // increment our id to add additional items
+		$idIncrement++;
 	}
 
 	async function createSpeaker() {
@@ -85,13 +85,18 @@
 
 		loading = true;
 
-		let response = await Speaker.createSpeaker({
-			name: nameValue,
-			position: positions,
-			avatar,
-		});
-		if (response) {
+		try {
+			await Speaker.createSpeaker({
+				name: nameValue,
+				position: positions,
+				avatar,
+			});
+
 			pushState("/speakers");
+		} catch {
+			$alert.message = "Server error..."
+			$alert.enabled = true
+			loading = false;
 		}
 	}
 </script>

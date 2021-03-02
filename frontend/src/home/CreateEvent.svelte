@@ -9,7 +9,7 @@
 
 	import Event from "@/services/event.js";
 
-	import { idIncrement, listTopics, storeEventTopics } from "@/components/stores.js";
+	import { idIncrement, listTopics, storeEventTopics, alert } from "@/components/stores.js";
 
 	import Speaker from "@/services/speaker.js";
 	import { onMount, onDestroy } from "svelte";
@@ -126,26 +126,19 @@
 
 		loading = true
 
-		console.log({
-			episode: parseInt(episodeValue, 10),
-			datetime,
-			topic: topics,
-		})
+		try {
+			await Event.createEvent({
+				episode: parseInt(episodeValue, 10),
+				datetime,
+				topic: topics,
+			});
 
-		let response = await Event.createEvent({
-			episode: parseInt(episodeValue, 10),
-			datetime,
-			topic: topics,
-		});
-
-		if (response.episode[0] == "event with this episode already exists.") {
-			episodeError.enabled = true;
-			episodeError.message = "Event with this episode already exists";
-			loading = false
-		} else {
 			pushState("/home")
+		} catch {
+			$alert.message = "Server error..."
+			$alert.enabled = true
+			loading = false;
 		}
-		
 	}
 </script>
 

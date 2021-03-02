@@ -15,8 +15,6 @@
 		speakers = response;
 	});
 
-	// $: allSpeakers = speakers
-
 	function navigateCreateEvent() {
 		pushState("/speakers/create-speaker");
 	}
@@ -70,18 +68,6 @@
 	.events {
 		display: flex;
 		flex-wrap: wrap;
-	}
-	.create-button {
-		display: flex;
-		align-items: center;
-		padding: 10px;
-		cursor: pointer;
-	}
-	.create-text {
-		color: var(--purple-2);
-		font: var(--primary-font-semibold);
-		font-size: 14px;
-		margin-left: 5px;
 	}
 	@media only screen and (max-width: 600px) {
 		.events {

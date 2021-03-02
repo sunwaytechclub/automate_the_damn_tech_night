@@ -8,6 +8,8 @@
 	import Cookie from "js-cookie";
 	import SideNavbar from "@/components/SideNavbar.svelte";
 	import { disableNavbar } from "@/utils/store";
+	import Alert from "@/components/Alert.svelte"
+	import { alert } from "@/components/stores"
 
 	let content;
 	let uri = location.pathname;
@@ -66,6 +68,9 @@
 		>
 			<svelte:component this={$Route} {$params} />
 		</div>
+		{#if $alert.enabled}
+			<Alert bind:visible={$alert.enabled} alertText={$alert.message}/>
+		{/if}
 	{/if}
 </main>
 
