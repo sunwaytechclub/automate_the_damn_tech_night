@@ -1,9 +1,11 @@
 <script>
+    import { fade } from "svelte/transition";
+	import { quintInOut } from "svelte/easing";
     export let visible = false;
 </script>
 
 {#if visible}
-        <div class="blur-background">
+        <div class="blur-background"  transition:fade={{ duration: 200, easing: quintInOut }}>
             <div class="alert-div">
                 <img src="/assets/icons/close-big.svg" alt="" class="close" on:click={()=>{visible = false}}/>
                 <slot></slot>
@@ -19,7 +21,7 @@
         height: 100vh;
         width: 100vw;
         background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1;
+        z-index: 7;
         display: grid;
         place-items: center;
     }
@@ -38,7 +40,7 @@
         top: 20px;
         cursor: pointer;
     }
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 966px) {
 		.alert-div {
             min-width: 0;
             width: 350px;

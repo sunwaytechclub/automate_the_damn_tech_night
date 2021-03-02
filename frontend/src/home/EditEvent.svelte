@@ -200,56 +200,56 @@
 					on:click={showDeleteDialog}
 				/>
 		</div>
-		
-			
-			<div class="form">
-				<div>
-					<TextInput
-						bind:instance={episode}
-                        value={event.episode}
-						label="Tech Night Episode"
-						placeholder="Tech Night Episode"
-						error={episodeError}
-						type="number"
-						disabled={loading ? true : false}
-					/>
-				</div>
-				<div>
-					{#each $storeEventTopics as item, i}
-						<svelte:component this={SpeakerField} objAttributes={item} disabled={loading ? true : false} />
-					{/each}
-					<div class="add-topic-div">
-						<ActionButton on:click={addSpeaker} disabled={loading ? true : false}/>
+			<div class="form-wrapper">
+				<div class="form">
+					<div>
+						<TextInput
+							bind:instance={episode}
+							value={event.episode}
+							label="Tech Night Episode"
+							placeholder="Tech Night Episode"
+							error={episodeError}
+							type="number"
+							disabled={loading ? true : false}
+						/>
 					</div>
-					{#if topicError.enabled}
-						<p class="error-message">{topicError.message}</p>
-					{/if}
-				</div>
-				<div class="side-by-side">
-					<DatePicker bind:date error={dateError} disabled={loading ? true : false} defaultDate={event.datetime}/>
-					<TimePicker bind:time error={timeError} disabled={loading ? true : false} {defaultHour} {defaultMinutes}/>
-				</div>
-				<!-- <div class="side-by-side" style="margin-bottom: 20px">
-					<TextInput
-						bind:instance={venue}
-						label="Venue / Platform"
-						placeholder="Venue / Platform"
-						error={venueError}
-					/>
-					<TextInput
-						bind:instance={registrationLink}
-						label="Registration Link"
-						placeholder="Registration Link"
-						error={registrationLinkError}
-					/>
-				</div> -->
-				<!-- <CheckBox label="Post on Facebook Group" bind:checked={isPostFacebook}/>
-            <CheckBox label="Post on Telegram " bind:checked={isPostTelegram}/>
-            <CheckBox label="Send emails to departments" 
-                subText="Email will be sent to SET, A-Level, SFP, AUSMAT, DIIT. To edit, go to admin portal."
-                bind:checked={isSendDepartments}/> -->
-				<div class="publish-button-div">
-					<Button style="width: 50%" label="CONFIRM" on:click={updateEvent} {loading}/>
+					<div>
+						{#each $storeEventTopics as item, i}
+							<svelte:component this={SpeakerField} objAttributes={item} disabled={loading ? true : false} />
+						{/each}
+						<div class="add-topic-div">
+							<ActionButton on:click={addSpeaker} disabled={loading ? true : false}/>
+						</div>
+						{#if topicError.enabled}
+							<p class="error-message">{topicError.message}</p>
+						{/if}
+					</div>
+					<div class="side-by-side">
+						<DatePicker bind:date error={dateError} disabled={loading ? true : false} defaultDate={event.datetime}/>
+						<TimePicker bind:time error={timeError} disabled={loading ? true : false} {defaultHour} {defaultMinutes}/>
+					</div>
+					<!-- <div class="side-by-side" style="margin-bottom: 20px">
+						<TextInput
+							bind:instance={venue}
+							label="Venue / Platform"
+							placeholder="Venue / Platform"
+							error={venueError}
+						/>
+						<TextInput
+							bind:instance={registrationLink}
+							label="Registration Link"
+							placeholder="Registration Link"
+							error={registrationLinkError}
+						/>
+					</div> -->
+					<!-- <CheckBox label="Post on Facebook Group" bind:checked={isPostFacebook}/>
+				<CheckBox label="Post on Telegram " bind:checked={isPostTelegram}/>
+				<CheckBox label="Send emails to departments" 
+					subText="Email will be sent to SET, A-Level, SFP, AUSMAT, DIIT. To edit, go to admin portal."
+					bind:checked={isSendDepartments}/> -->
+					<div class="publish-button-div">
+						<Button style="width: 50%" label="CONFIRM" on:click={updateEvent} {loading}/>
+					</div>
 				</div>
 			</div>
 		{/await}
@@ -296,8 +296,12 @@
 		font: var(--primary-font-regular);
 		font-size: 10px;
 	}
+	.form-wrapper {
+		display: flex;
+		justify-content: center;
+	}
 	.form {
-		width: 90%;
+		width: 50vw;
 	}
 	.side-by-side {
 		display: grid;
@@ -337,11 +341,9 @@
         margin-top: -10px;
     }
 	@media only screen and (max-width: 966px) {
-		.content {
-			align-items: flex-start;
-		}
 		.form {
-			margin-left: 10px;
+			width: 80vw;
+			margin-left: -15px;
 		}
 		.side-by-side {
             display: block

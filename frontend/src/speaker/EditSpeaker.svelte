@@ -172,65 +172,67 @@
 		{#if positions.length == 0}
 			<!-- TODO: loader -->
 		{:else}
-			<div class="form">
-				<div>
-					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label>Avatar</label>
-					<div class="avatar-div">
-						<div class="dialog-div">
-							<p class="alert-dialog-title">Current avatar:</p>
-							<img
-								src={speaker.avatar}
-								alt=""
-								class="avatar"
-								bind:this={avatarElement}
-							/>
-						</div>
-						<!-- <ActionButton label="Upload new avatar" iconPath="/assets/icons/upload-yellow.svg" on:click={showUploadDialog}/> -->
-						<div class="dialog-div">
-							<p class="alert-dialog-title">Upload new avatar:</p>
-							<div class="dragdrop-div">
-								<Dragndrop bind:file={avatar} />
-								{#if avatarError.enabled}
-									<p class="error-message">{avatarError.message}</p>
-								{:else}
-									<div class="error-spacer" />
-								{/if}
+			<div class="form-wrapper">
+				<div class="form">
+					<div>
+						<!-- svelte-ignore a11y-label-has-associated-control -->
+						<label>Avatar</label>
+						<div class="avatar-div">
+							<div class="dialog-div">
+								<p class="alert-dialog-title">Current avatar:</p>
+								<img
+									src={speaker.avatar}
+									alt=""
+									class="avatar"
+									bind:this={avatarElement}
+								/>
+							</div>
+							<!-- <ActionButton label="Upload new avatar" iconPath="/assets/icons/upload-yellow.svg" on:click={showUploadDialog}/> -->
+							<div class="dialog-div">
+								<p class="alert-dialog-title">Upload new avatar:</p>
+								<div class="dragdrop-div">
+									<Dragndrop bind:file={avatar} />
+									{#if avatarError.enabled}
+										<p class="error-message">{avatarError.message}</p>
+									{:else}
+										<div class="error-spacer" />
+									{/if}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div>
-					<TextInput
-						value={speaker.name}
-						label="Name"
-						placeholder="Name"
-						bind:instance={name}
-						error={nameError}
-						disabled={loading ? true : false}
-					/>
-				</div>
-				<div>
-					{#each $storeSpeakerPositions as item, i}
-                		<svelte:component this={PositionField} objAttributes={item} disabled={loading ? true : false} on:delete={deletePosition}/>
-					{/each}
-					<div class="add-topic-div">
-						<ActionButton label="Add Position" on:click={addPosition}/>
+					<div>
+						<TextInput
+							value={speaker.name}
+							label="Name"
+							placeholder="Name"
+							bind:instance={name}
+							error={nameError}
+							disabled={loading ? true : false}
+						/>
 					</div>
-					{#if maxPositionError.enabled}
-						<p class="error-message">{maxPositionError.message}</p>
-					{/if}
-					{#if positionError.enabled}
-						<p class="error-message">{positionError.message}</p>
-					{/if}
-				</div>
-				<div class="confirm-button-div">
-					<Button
-						style="width: 50%"
-						label="CONFIRM"
-						on:click={editSpeaker}
-						{loading}
-					/>
+					<div>
+						{#each $storeSpeakerPositions as item, i}
+							<svelte:component this={PositionField} objAttributes={item} disabled={loading ? true : false} on:delete={deletePosition}/>
+						{/each}
+						<div class="add-topic-div">
+							<ActionButton label="Add Position" on:click={addPosition}/>
+						</div>
+						{#if maxPositionError.enabled}
+							<p class="error-message">{maxPositionError.message}</p>
+						{/if}
+						{#if positionError.enabled}
+							<p class="error-message">{positionError.message}</p>
+						{/if}
+					</div>
+					<div class="confirm-button-div">
+						<Button
+							style="width: 50%"
+							label="CONFIRM"
+							on:click={editSpeaker}
+							{loading}
+						/>
+					</div>
 				</div>
 			</div>
 		{/if}
@@ -269,8 +271,12 @@
 		flex-direction: column;
 		width: 95%;
 	}
+	.form-wrapper {
+		display: flex;
+		justify-content: center;
+	}
 	.form {
-		width: 100%;
+		width: 50vw;
 	}
 	.page-subheader {
 		display: flex;
@@ -349,7 +355,7 @@
 			display: block;
 		}
 		.form {
-			width: 80%;
+			width: 80vw;
 		}
 	}
 </style>

@@ -146,7 +146,7 @@
 		grid-template-columns: auto auto;
 		column-gap: 30px;
 	}
-	@media only screen and (max-width: 600px) {
+	@media only screen and (max-width: 966px) {
 		.logout-button-div {
 			display: block;
 		}

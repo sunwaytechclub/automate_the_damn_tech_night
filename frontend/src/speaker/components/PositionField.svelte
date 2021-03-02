@@ -48,7 +48,7 @@
         top: 51%;
         left: 100px;
         overflow: hidden;
-        width: 85%;
+        width: 80%;
         height: 2px;
         content: '\a0';
         background-color: var(--light-grey)
@@ -61,7 +61,7 @@
     }
     @media only screen and (max-width: 966px) {
 		.speaker-header:after {
-            width: 55%;
+            width: 60%;
         }
 	}
 </style>

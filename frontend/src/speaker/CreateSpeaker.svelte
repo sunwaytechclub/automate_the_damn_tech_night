@@ -107,59 +107,61 @@
 		<div class="page-subheader">
 			<p class="subheader-text">Create new speaker</p>
 		</div>
-		<div class="form">
-			<div>
-				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label>Avatar</label>
-				<div class="upload-div-wrapper">
-					<div class="upload-div">
-						<Dragndrop bind:file={avatar} />
+		<div class="form-wrapper">
+			<div class="form">
+				<div>
+					<!-- svelte-ignore a11y-label-has-associated-control -->
+					<label>Avatar</label>
+					<div class="upload-div-wrapper">
+						<div class="upload-div">
+							<Dragndrop bind:file={avatar} />
 
-						{#if avatarError.enabled}
-							<p class="error-message">{avatarError.message}</p>
-						{:else}
-							<div class="error-spacer" />
-						{/if}
+							{#if avatarError.enabled}
+								<p class="error-message">{avatarError.message}</p>
+							{:else}
+								<div class="error-spacer" />
+							{/if}
+						</div>
 					</div>
 				</div>
-			</div>
-			<div>
-				<TextInput
-					bind:instance={name}
-					label="Name"
-					placeholder="Name"
-					error={nameError}
-					disabled={loading ? true : false}
-				/>
-			</div>
-			<div>
-				<!-- <TextInput
-					bind:instance={position}
-					label="Position"
-					placeholder="Position"
-					error={positionError}
-					disabled={loading ? true : false}
-				/> -->
-				{#each $storeSpeakerPositions as item}
-                	<svelte:component this={PositionField} objAttributes={item} disabled={loading ? true : false}/>
-                {/each}
-				<div class="add-topic-div">
-                    <ActionButton label="Add Position" on:click={addPosition}/>
-                </div>
-				{#if maxPositionError.enabled}
-					<p class="error-message">{maxPositionError.message}</p>
-				{/if}
-				{#if positionError.enabled}
-					<p class="error-message">{positionError.message}</p>
-				{/if}
-			</div>
-			<div class="confirm-button-div">
-				<Button
-					style="width: 50%"
-					label="CONFIRM"
-					on:click={createSpeaker}
-					{loading}
-				/>
+				<div>
+					<TextInput
+						bind:instance={name}
+						label="Name"
+						placeholder="Name"
+						error={nameError}
+						disabled={loading ? true : false}
+					/>
+				</div>
+				<div>
+					<!-- <TextInput
+						bind:instance={position}
+						label="Position"
+						placeholder="Position"
+						error={positionError}
+						disabled={loading ? true : false}
+					/> -->
+					{#each $storeSpeakerPositions as item}
+						<svelte:component this={PositionField} objAttributes={item} disabled={loading ? true : false}/>
+					{/each}
+					<div class="add-topic-div">
+						<ActionButton label="Add Position" on:click={addPosition}/>
+					</div>
+					{#if maxPositionError.enabled}
+						<p class="error-message">{maxPositionError.message}</p>
+					{/if}
+					{#if positionError.enabled}
+						<p class="error-message">{positionError.message}</p>
+					{/if}
+				</div>
+				<div class="confirm-button-div">
+					<Button
+						style="width: 50%"
+						label="CONFIRM"
+						on:click={createSpeaker}
+						{loading}
+					/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -182,8 +184,12 @@
 		flex-direction: column;
 		width: 100%;
 	}
+	.form-wrapper {
+		display: flex;
+		justify-content: center;
+	}
 	.form {
-		width: 100%;
+		width: 50vw;
 	}
 	.page-subheader {
 		display: flex;
@@ -220,12 +226,13 @@
 	.error-spacer {
 		height: 20px;
 	}
-	@media only screen and (max-width: 600px) {
+	@media only screen and (max-width: 966px) {
 		.content {
 			align-items: center;
 		}
 		.form {
-			width: 80%;
+			width: 80vw;
+			margin-left: -15px;
 		}
 		.upload-div-wrapper {
 			display: flex;

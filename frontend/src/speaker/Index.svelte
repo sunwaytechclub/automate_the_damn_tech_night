@@ -69,7 +69,7 @@
 		display: flex;
 		flex-wrap: wrap;
 	}
-	@media only screen and (max-width: 600px) {
+	@media only screen and (max-width: 966px) {
 		.events {
 			justify-content: center;
 		}

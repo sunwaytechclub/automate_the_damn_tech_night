@@ -79,7 +79,7 @@
         font: var(--primary-font-regular);
         font-size: 12px;
     }
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 966px) {
 		.card-wrapper {
             width: 300px;
         }
