@@ -1,13 +1,18 @@
 from PIL import Image, ImageOps, ImageDraw, ImageFont
 from .cropping import crop
 from django.conf import settings
+import os
 
 import io
 
 TOP_RIGHT = (288, 400)
 TEXT_SIZE = 18
-TEMPLATE_IMG = "functions/posters/speaker/assets/TNT1.png"
-FONT_TTF_FILE = "functions/posters/speaker/assets/Montserrat-SemiBold.otf"
+TEMPLATE_IMG = os.path.join(
+    settings.BASE_DIR, "./functions/posters/speaker/assets/TNT1.png"
+)
+FONT_TTF_FILE = os.path.join(
+    settings.BASE_DIR, "./functions/posters/speaker/assets/Montserrat-SemiBold.otf"
+)
 
 
 def generate_speaker_poster(speaker):

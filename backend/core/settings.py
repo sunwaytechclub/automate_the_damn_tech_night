@@ -26,7 +26,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "automatethedamntechnightapi.sunwaytechclub.org"]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -60,7 +60,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "automate_the_damn_tech_night.urls"
+ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
     {
@@ -84,7 +84,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-WSGI_APPLICATION = "automate_the_damn_tech_night.wsgi.application"
+WSGI_APPLICATION = "core.wsgi.application"
 
 
 # Database
@@ -134,6 +134,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+)
 STATIC_URL = "/static/"
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static/"),)
+STATIC_ROOT = "static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "media/"

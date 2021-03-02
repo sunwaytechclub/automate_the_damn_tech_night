@@ -3,13 +3,15 @@ from PIL import ImageFont
 from PIL import ImageDraw
 from datetime import datetime
 from django.conf import settings
-
+import os
 import io
 
 TEXT_Y_PIXEL = 680
 TEXT_SIZE = 36
-TEMPLATE_IMG = "functions/posters/event/poster.png"
-FONT_TTF_FILE = "functions/posters/event/Montserrat-medium.otf"
+TEMPLATE_IMG = os.path.join(settings.BASE_DIR, "./functions/posters/event/poster.png")
+FONT_TTF_FILE = os.path.join(
+    settings.BASE_DIR, "./functions/posters/event/Montserrat-Medium.otf"
+)
 
 
 def generate_event_poster(episode_number, date, time):
