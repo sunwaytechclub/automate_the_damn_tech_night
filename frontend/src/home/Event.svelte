@@ -13,6 +13,7 @@
 	let writeupContainer;
 	let content;
 	let copyText = "Copy";
+	let topics = []
 
 	onMount(async () => {
 		const data = await EventAPI.getEvent({
@@ -20,6 +21,7 @@
 		});
 
 		event = data;
+		topics = data.topic
 		content = event.writeup;
 		event.writeup = event.writeup.replace(/\n/g, "<br />");
 		writeupContainer.innerHTML = event.writeup;
@@ -35,16 +37,31 @@
 		document.body.removeChild(textarea);
 	}
 
-	async function downloadPoster() {
-		const response = await fetch(event.poster);
+	async function downloadImage(url, fileName) {
+		const response = await fetch(url);
 		const object = await response.blob();
 		const objectURL = URL.createObjectURL(object);
 		const link = document.createElement("a");
 		link.href = objectURL;
-		link.setAttribute("download", `tech-night-poster-#${event.episode}.jpg`);
+		link.setAttribute("download", `tech-night-poster-${fileName}.jpg`);
 		link.setAttribute("style", "display: none");
 		document.body.appendChild(link);
 		link.click();
+	}
+	
+	async function downloadAllPoster() {
+		await downloadPoster()
+		for (let i = 0; i < event.topic.length; i++) {
+			await downloadTopicPoster(i)
+		}
+	}
+
+	function downloadPoster() {
+		downloadImage(event.poster, `#${event.episode}`)
+	}
+
+	function downloadTopicPoster(index) {
+		downloadImage(event.topic[index].poster, event.topic[index].speaker.name)
 	}
 
 	function navigateEditEvent() {
@@ -85,13 +102,28 @@
 						<div class="field-title">
 							<p class="field-title-text">Generated Poster</p>
 							<ActionButton
-								label="Download"
+								label="Download All"
 								iconPath="/assets/icons/download.svg"
 								textColor="var(--dark-blue)"
-								on:click={downloadPoster}
+								on:click={downloadAllPoster}
 							/>
 						</div>
-						<img src={event.poster} alt="" class="poster" />
+						<div class="poster-div">
+							<span class="poster-wrapper">
+							<img src={event.poster} alt="" class="poster" />
+							<div class="download-icon-wrapper" on:click={downloadPoster}>
+								<img src="/assets/icons/download.svg" alt="download" class="download-poster" />
+							</div>
+						</span>
+							{#each topics as topic, i}
+								<span class="poster-wrapper">
+									<img src={topic.poster} alt="" class="poster"/>
+									<div class="download-icon-wrapper" on:click={() => {downloadTopicPoster(i)}}>
+										<img src="/assets/icons/download.svg" alt="download" class="download-poster" />
+									</div>
+								</span>
+							{/each}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -151,8 +183,45 @@
 		padding: 30px;
 		width: 100%;
 	}
+	.poster-wrapper {
+		width: 50%;
+		height: 100%;
+		display: flex;
+		position: relative;
+	}
+	.poster-div {
+		display: flex;
+		flex-wrap: wrap;
+	}
 	.poster {
-		width: 100%;
+		width: 95%;
+		margin-bottom: 20px;
+		cursor: pointer;
+		background-color: black;
+		margin-right: 10px;
+	}
+	.download-icon-wrapper {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 95%;
+		height: 95%;
+		display: grid;
+		place-items: center;
+		visibility: hidden;
+	}
+	.poster:hover ~ .download-icon-wrapper {
+		visibility: visible;
+		background-color: rgba(255, 255, 255, 0.9);
+		cursor: pointer;
+	}
+	.download-icon-wrapper:hover {
+		visibility: visible;
+		background-color: rgba(255, 255, 255, 0.9);
+		cursor: pointer;
+	}
+	.download-poster {
+		width: 40px;
 	}
 	.line {
 		padding-bottom: 20px;
@@ -163,6 +232,12 @@
 		.generated-content {
 			width: 80vw;
 			margin-left: 10px;
+		}
+		.poster-wrapper {
+			width: 100%;
+		}
+		.poster {
+			width: 100%
 		}
 	}
 </style>
