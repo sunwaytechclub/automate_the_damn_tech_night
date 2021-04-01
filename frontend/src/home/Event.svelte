@@ -38,10 +38,14 @@
 	}
 
 	async function downloadImage(url, fileName) {
+
+		if (url.indexOf('http://')) url = url.replace('http://', 'https://')
+
 		const response = await fetch(url);
 		const object = await response.blob();
 		const objectURL = URL.createObjectURL(object);
 		const link = document.createElement("a");
+
 		link.href = objectURL;
 		link.setAttribute("download", `tech-night-poster-${fileName}.jpg`);
 		link.setAttribute("style", "display: none");
