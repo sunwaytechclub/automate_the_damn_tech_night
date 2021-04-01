@@ -38,7 +38,7 @@
 	}
 
 	async function downloadImage(url, fileName) {
-
+		
 		if (url.indexOf('http://')) url = url.replace('http://', 'https://')
 
 		const response = await fetch(url);
@@ -54,14 +54,25 @@
 	}
 	
 	async function downloadAllPoster() {
-		await downloadPoster()
+		await downloadEventPoster()
 		for (let i = 0; i < event.topic.length; i++) {
 			await downloadTopicPoster(i)
 		}
+		await downloadDscPoster()
+		await downloadDscBanner()
 	}
 
-	function downloadPoster() {
-		downloadImage(event.poster, `#${event.episode}`)
+	function downloadEventPoster() {
+		downloadImage(event.event_poster, `#${event.episode}`)
+	}
+
+	function downloadDscPoster() {
+		console.log(event)
+		downloadImage(event.dsc_poster, `#${event.episode}-dsc-poster`)
+	}
+
+	function downloadDscBanner() {
+		downloadImage(event.dsc_banner, `#${event.episode}-dsc-banner`)
 	}
 
 	function downloadTopicPoster(index) {
@@ -114,11 +125,11 @@
 						</div>
 						<div class="poster-div">
 							<span class="poster-wrapper">
-							<img src={event.poster} alt="" class="poster" />
-							<div class="download-icon-wrapper" on:click={downloadPoster}>
-								<img src="/assets/icons/download.svg" alt="download" class="download-poster" />
-							</div>
-						</span>
+								<img src={event.event_poster} alt="" class="poster" />
+								<div class="download-icon-wrapper" on:click={downloadEventPoster}>
+									<img src="/assets/icons/download.svg" alt="download" class="download-poster" />
+								</div>
+							</span>
 							{#each topics as topic, i}
 								<span class="poster-wrapper">
 									<img src={topic.poster} alt="" class="poster"/>
@@ -127,6 +138,18 @@
 									</div>
 								</span>
 							{/each}
+							<span class="poster-wrapper">
+								<img src={event.dsc_poster} alt="" class="poster" />
+								<div class="download-icon-wrapper" on:click={downloadDscPoster}>
+									<img src="/assets/icons/download.svg" alt="download" class="download-poster" />
+								</div>
+							</span>
+							<span class="poster-wrapper">
+								<img src={event.dsc_banner} alt="" class="poster" />
+								<div class="download-icon-wrapper" on:click={downloadDscBanner}>
+									<img src="/assets/icons/download.svg" alt="download" class="download-poster" />
+								</div>
+							</span>
 						</div>
 					</div>
 				</div>
